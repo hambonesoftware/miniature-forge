@@ -2,6 +2,8 @@
 
 Explore the outdoor 3D models at **https://hambonesoftware.github.io/miniature-forge/**.
 
+**[Try the lightweight procedural Danville prototype](https://hambonesoftware.github.io/miniature-forge/procedural/)**. Its complete renderer, geometry generators, shaders, architecture and controls fit in a single HTML file under 1 MB, with no external runtime dependencies. It uses WebGL2, geometric bevels, instancing, cached sun shadows and screen-space ambient occlusion. The original viewer remains available above.
+
 Choose Danville Main Street or Riverton. Overview supports drag and zoom; Walk uses WASD and mouse/drag look. Shift moves faster; Escape releases the mouse. Fly uses Q/E for vertical movement. Touch movement controls are included.
 
 Danville is an estimated, Moore Building-inspired architectural study, retaining historic forms with generic storefront labels. It is not a surveyed or complete reconstruction of Danville. Riverton is a fictional model train town. This edition explores streets and outdoor areas; building interiors remain closed.

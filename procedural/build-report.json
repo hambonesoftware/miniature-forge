@@ -1,0 +1,16 @@
+{
+  "totalFirstLoadBytes": 49747,
+  "files": 1,
+  "externalRuntimeRequests": 0,
+  "gzipBytes": 18798,
+  "brotliBytes": 16445,
+  "budgetBytes": 1000000,
+  "passed": true,
+  "sourceFiles": [
+    "math.mjs",
+    "geometry.mjs",
+    "town.mjs",
+    "renderer.mjs",
+    "app.mjs"
+  ]
+}
