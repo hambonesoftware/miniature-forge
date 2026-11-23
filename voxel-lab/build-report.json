@@ -1,7 +1,7 @@
 {
-  "htmlBytes": 103862,
-  "gzipBytes": 37014,
-  "brotliBytes": 23197,
+  "htmlBytes": 103582,
+  "gzipBytes": 37005,
+  "brotliBytes": 23105,
   "externalRuntimeRequests": 0,
   "contains": [
     "procedural storefront",

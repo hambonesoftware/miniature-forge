@@ -1,5 +1,7 @@
 # Miniature Forge
 
+**[Explore the real Danville map foundation](https://hambonesoftware.github.io/miniature-forge/danville-map/)**: 7,831 source building footprints, 1,452 road paths, optional KyFromAbove aerial photography, USGS terrain and a 3D footprint preview. This is an eight-kilometre reference window, not a city-boundary survey. Facades are not yet reconstructed; height provenance is shown explicitly.
+
 Explore the outdoor 3D models at **https://hambonesoftware.github.io/miniature-forge/**.
 
 **[Try the lightweight procedural Danville prototype](https://hambonesoftware.github.io/miniature-forge/procedural/)**. Its complete renderer, geometry generators, shaders, architecture and controls fit in a single HTML file under 1 MB, with no external runtime dependencies. It uses WebGL2, geometric bevels, instancing, cached sun shadows and screen-space ambient occlusion. The original viewer remains available above.

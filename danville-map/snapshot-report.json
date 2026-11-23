@@ -1,0 +1,43 @@
+{
+  "retrievedUtc": "2026-11-23T12:32:24.359308+00:00",
+  "boundsMercator": [
+    -9441905.553703757,
+    4524429.488394006,
+    -9431802.040638128,
+    4534533.001459633
+  ],
+  "origin": [
+    -84.7727,
+    37.6456
+  ],
+  "windowMetres": [
+    8000,
+    8000
+  ],
+  "buildingCount": 7831,
+  "sourceHeightCount": 6756,
+  "estimatedHeightCount": 1075,
+  "roadPathCount": 1452,
+  "terrainSamples": [
+    129,
+    129
+  ],
+  "terrainMetres": [
+    208.45,
+    333.51
+  ],
+  "uncompressedDataBytes": 2319244,
+  "compressedDataBytes": 701973,
+  "sources": {
+    "buildings": "https://services3.arcgis.com/ghsX9CKghMvyYjBU/arcgis/rest/services/Ky_OvertureMaps_Buildings_WM_gdb/FeatureServer/0",
+    "roads": "https://kygisserver.ky.gov/arcgis/rest/services/WGS84WM_Services/Ky_911_Road_Centerlines_WGS84WM/MapServer/0",
+    "imagery": "https://kygisserver.ky.gov/arcgis/rest/services/WGS84WM_Services/Ky_Imagery_Phase3_3IN_WGS84WM/MapServer",
+    "terrain": "https://elevation.nationalmap.gov/arcgis/rest/services/3DEPElevation/ImageServer"
+  },
+  "sha256": {
+    "town-data.bin": "f958f0d8c4fcead8e8f638db5a712b0e49d898e93d144e0daa386238645b134c",
+    "aerial-city.jpg": "4a686bb786ff6717f8a9ff30e63b24603e592d7ad4414e27f064b124b17f816a",
+    "aerial-downtown.jpg": "818f25bf9e20f0d7763ebdc50dc42db380e9ec74b134d61936c4887fa16dd5f4",
+    "terrain.tif": "b33a4d603579921a97904583b326bf2fd43a865ba05f0447169612d7e82d5fad"
+  }
+}

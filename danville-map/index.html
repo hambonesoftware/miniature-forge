@@ -1,0 +1,821 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="description" content="A georeferenced Danville, Kentucky map foundation using Kentucky building footprints, road centre lines, aerial imagery and USGS elevation."><link rel="icon" href="data:image/svg+xml,%3Csvg xmlns=%27http://www.w3.org/2000/svg%27 viewBox=%270 0 32 32%27%3E%3Crect width=%2732%27 height=%2732%27 rx=%276%27 fill=%27%2317292b%27/%3E%3Cpath d=%27M6 9l7-3 6 3 7-3v17l-7 3-6-3-7 3zM13 6v17M19 9v17%27 stroke=%27%23d8dc98%27 fill=%27none%27/%3E%3C/svg%3E"><title>Danville · Map foundation</title>
+<style>
+:root{font:16px/1.45 system-ui,sans-serif;color:#edf2eb;background:#e4e9df;color-scheme:dark}*{box-sizing:border-box}body{margin:0;overflow:hidden}canvas{position:fixed;inset:0;display:block;width:100%;height:100%;touch-action:none;outline:none}header,nav,aside,footer,#loading,.scale{position:fixed;z-index:2;background:#14292ded;border:1px solid #ffffff26;box-shadow:0 5px 25px #182f301b;border-radius:11px}header{max-width:calc(100% - 24px);left:18px;top:18px;padding:14px 17px}.brand{font-size:.75rem;letter-spacing:.13em;color:#d8dfa3}h1{font-size:1.35rem;margin:2px 0}header p{font-size:.875rem;color:#bdcfca;margin:3px 0}nav{right:18px;top:18px;padding:8px;display:flex;gap:6px;align-items:center;flex-wrap:wrap;max-width:calc(100% - 440px)}button,select,input{font:inherit;font-size:.875rem;padding:8px 10px;border:1px solid #ffffff30;border-radius:7px;background:#ffffff0a;color:inherit}button,select{cursor:pointer}select,input{background:#203b3e}button:hover,a:hover{background:#ffffff20}button.active{background:#d7dda1;color:#172d2d;border-color:#d7dda1}button:focus-visible,input:focus-visible,select:focus-visible,a:focus-visible{outline:2px solid #d8dc98;outline-offset:2px}a{color:#dce7b4;text-underline-offset:3px}#search-form{display:flex;gap:6px}#search{width:185px}#layers{left:18px;top:146px;padding:13px 16px;width:280px;font-size:.875rem}#layers h2{font-size:1rem;margin:0 0 8px}#layers label{display:flex;align-items:center;gap:8px;margin:8px 0;color:#d1dcd4}input[type=checkbox]{accent-color:#d8dc98}input[type=range]{width:140px;accent-color:#d8dc98;padding:0}#layers p{font-size:.8rem;color:#bacdc6;margin:8px 0}#three-tools{border-top:1px solid #ffffff25;margin-top:10px;padding-top:9px}#selection{right:18px;top:150px;width:300px;padding:16px}#selection h2{font-size:1.05rem;margin:0 0 12px}#selection p{font-size:.875rem;color:#c9d7cf}#building-id{font-size:.75rem;overflow-wrap:anywhere}#selection button{float:right}.scale{bottom:90px;left:18px;padding:9px 13px;min-width:90px;font-size:.8rem;color:#dae2d3}#scale-line{height:7px;border:2px solid #dfe5c8;border-top:0;margin-top:3px}.north{float:right;margin-left:15px;color:#d8dda1}footer{bottom:15px;left:18px;right:18px;padding:10px 14px;font-size:.8rem;display:flex;gap:9px 18px;flex-wrap:wrap;justify-content:space-between}footer a{white-space:nowrap}footer p{margin:0}#status{color:#d4dfd0;flex-basis:100%}#coordinates{color:#adc5bc}#loading,#help-panel{left:50%;top:50%;transform:translate(-50%,-50%);padding:24px;width:min(500px,92%);max-height:85%;overflow:auto}#loading{z-index:4}#help-panel{z-index:5}#loading h2,#help-panel h2{font-size:1.2rem;margin:0 0 10px}#help-panel p{font-size:.925rem;color:#cbd7ce}#counts{font-variant-numeric:tabular-nums}.legend{display:inline-block;width:11px;height:11px;border-radius:2px;margin-right:5px}.source-height{background:#829e9b}.estimated-height{background:#c8a16b} [hidden]{display:none!important}
+@media(max-width:1100px){header{top:12px;left:12px;padding:11px 14px}header p{display:none}nav{top:109px;left:12px;right:12px;max-width:none}#layers{top:190px;left:12px;width:260px}#selection{top:190px;right:12px}.scale{left:12px;bottom:120px}footer{left:12px;right:12px;bottom:12px}h1{font-size:1.15rem}}
+@media(max-width:640px){nav{gap:5px}#search{width:150px}#layers{top:250px;width:210px;padding:10px 12px}#layers p{display:none}#layers h2{font-size:.9rem}#layers label{margin:6px 0;font-size:.8rem}#selection{top:auto;bottom:155px;width:calc(100% - 24px);right:12px}#coordinates{display:none}#counts{font-size:.8rem}.scale{bottom:145px}footer{font-size:.75rem;gap:5px 10px}#status{max-height:45px;overflow:auto}input[type=range]{width:95px}}
+</style></head><body>
+<canvas id="map" tabindex="0" aria-label="Danville map and aerial reference"></canvas><canvas id="three" tabindex="0" aria-label="Three-dimensional map-aligned footprint preview" hidden></canvas>
+<header><div class="brand">MINIATURE FORGE / GEOGRAPHIC FOUNDATION</div><h1>Danville, Kentucky</h1><p>Real footprints and roads · 8 km reference window</p><span id="counts">Loading geographic snapshot…</span></header>
+<nav aria-label="Map controls"><button id="map-button" class="active">Map</button><button id="aerial-button">Aerial</button><button id="three-button">3D layout</button><select id="checkpoint" aria-label="Map area"><option value="downtown">Main &amp; Third</option><option value="city">Whole reference area</option><option value="campus">Centre College area</option><option value="south">South Danville</option></select><form id="search-form"><input id="search" aria-label="Search mapped road or building" placeholder="Road or building name"><button type="submit">Find</button></form><button id="layers-button" class="active">Layers</button><button id="help">Help</button></nav>
+<aside id="layers"><h2>Reference layers</h2><label><input id="footprints" type="checkbox" checked> Building footprints</label><label><input id="labels" type="checkbox" checked> Street labels</label><label>Aerial overlay <input id="opacity" type="range" min="0" max="90" value="35" aria-label="Footprint opacity over aerial"></label><p><span class="legend source-height"></span>Source-provided height<br><span class="legend estimated-height"></span>Estimated height</p><p>Footprints show the source geometry; heights and road widths are not a survey.</p><div id="three-tools" hidden><label><input id="terrain" type="checkbox" checked> USGS terrain</label><label><input id="three-aerial" type="checkbox"> Aerial on terrain</label><button id="orbit-button">Orbit</button><button id="fly-button">Fly</button></div></aside>
+<aside id="selection" hidden><button id="close-selection" aria-label="Close building details">Close</button><h2 id="building-name"></h2><p id="building-height"></p><p id="building-coordinates"></p><p id="building-id"></p><p>Footprint source: Overture Maps via Kentucky DGI.</p></aside>
+<div class="scale"><span class="north">N ↑</span><span id="scale-text">200 m</span><div id="scale-line"></div></div>
+<footer><p id="status">Loading…</p><p><a href="https://kyfromabove.ky.gov/">Aerial: KyFromAbove, 2022–2024</a> · <a href="https://www.arcgis.com/home/item.html?id=53f4e3587a1f4e8b9d1ba93a25a94da4">Buildings: Overture / KY DGI</a> · <a href="https://kygisserver.ky.gov/arcgis/rest/services/WGS84WM_Services/Ky_911_Road_Centerlines_WGS84WM/MapServer">Roads: KY 911</a> · <a href="https://www.usgs.gov/3d-elevation-program">Elevation: USGS 3DEP</a></p><span id="coordinates"></span><a href="../voxel-lab/">Architecture comparison</a></footer>
+<section id="loading" role="status"><h2>Loading Danville</h2><p id="loading-message">Unpacking the geographic snapshot…</p></section>
+<aside id="help-panel" hidden><h2>Build the town on its real layout</h2><p>Drag to pan the map; scroll or pinch to zoom. Switch to Aerial to compare the footprint positions with official orthophotography. The opacity slider fades footprint overlays. Click a footprint in Map or Aerial to inspect its height basis and coordinates.</p><p>3D layout generates actual polygonal building volumes and a sampled terrain mesh. Drag to orbit, scroll to zoom, Shift-drag to pan. Fly uses W A S D, Q / E for height and Shift for speed. The 3D aerial checkbox applies the same georeferenced image to the terrain.</p><p>This is a geographic massing preview. Facades, roof shapes, bridges and detailed street furniture are not reconstructed. Source height fields may themselves be estimates; orange buildings use a floor-count estimate or a six-metre fallback. Road ribbons have schematic widths. The 129 × 129 elevation grid samples the terrain at roughly 62 metres, with no vertical exaggeration.</p><p>The 8 × 8 km window is not the municipal boundary. The imagery is a saved reference from the 2022–2024 Phase 3 program, not a live satellite feed. Footprints and imagery may differ in capture date and roof/ground alignment.</p><p>Aerial imagery is loaded only when requested. Default map geometry and terrain are local, reproducible data. <a href="./snapshot-report.json">Snapshot provenance</a> · <a href="./town-data.json">Download map data</a> · <a href="./EARCUT-LICENSE">Triangulator license</a></p><button id="close-help">Explore</button></aside>
+<script type="module">
+// ../procedural/math.mjs
+// Column-major matrices, right-handed world, metres, Y up.
+const sub=(a,b)=>a.map((v,i)=>v-b[i]);
+const dot=(a,b)=>a.reduce((s,v,i)=>s+v*b[i],0);
+const cross=(a,b)=>[a[1]*b[2]-a[2]*b[1],a[2]*b[0]-a[0]*b[2],a[0]*b[1]-a[1]*b[0]];
+const norm=a=>{const n=Math.hypot(...a)||1;return a.map(v=>v/n);};
+function mul(a,b){const o=new Float32Array(16);for(let c=0;c<4;c++)for(let r=0;r<4;r++)for(let k=0;k<4;k++)o[c*4+r]+=a[k*4+r]*b[c*4+k];return o;}
+function perspective(fov,aspect,near,far){const f=1/Math.tan(fov/2);return new Float32Array([f/aspect,0,0,0,0,f,0,0,0,0,(far+near)/(near-far),-1,0,0,2*far*near/(near-far),0]);}
+function lookAt(eye,target){const z=norm(sub(eye,target)),x=norm(cross([0,1,0],z)),y=cross(z,x);return new Float32Array([x[0],y[0],z[0],0,x[1],y[1],z[1],0,x[2],y[2],z[2],0,-dot(x,eye),-dot(y,eye),-dot(z,eye),1]);}
+function ortho(l,r,b,t,n,f){return new Float32Array([2/(r-l),0,0,0,0,2/(t-b),0,0,0,0,-2/(f-n),0,-(r+l)/(r-l),-(t+b)/(t-b),-(f+n)/(f-n),1]);}
+function inverse(a){const o=new Float32Array(16),m=Array.from({length:4},(_,r)=>Array.from({length:8},(_,c)=>c<4?a[c*4+r]:+(c-4===r)));for(let c=0;c<4;c++){let p=c;for(let r=c+1;r<4;r++)if(Math.abs(m[r][c])>Math.abs(m[p][c]))p=r;[m[p],m[c]]=[m[c],m[p]];const d=m[c][c];for(let k=0;k<8;k++)m[c][k]/=d;for(let r=0;r<4;r++)if(r!==c){const s=m[r][c];for(let k=0;k<8;k++)m[r][k]-=s*m[c][k];}}for(let r=0;r<4;r++)for(let c=0;c<4;c++)o[c*4+r]=m[r][c+4];return o;}
+function transform(p,s=[1,1,1],r=[0,0,0]){const [x,y,z]=r,cx=Math.cos(x),sx=Math.sin(x),cy=Math.cos(y),sy=Math.sin(y),cz=Math.cos(z),sz=Math.sin(z);return [cy*cz*s[0],(sx*sy*cz+cx*sz)*s[0],(-cx*sy*cz+sx*sz)*s[0],0,-cy*sz*s[1],(-sx*sy*sz+cx*cz)*s[1],(cx*sy*sz+sx*cz)*s[1],0,sy*s[2],-sx*cy*s[2],cx*cy*s[2],0,...p,1];}
+function seeded(seed){let s=seed>>>0;return()=>{s=(Math.imul(s,1664525)+1013904223)>>>0;return s/4294967296;};}
+
+// vendor/earcut.mjs
+/* eslint-disable */
+// copy of mapbox/earcut version 3.0.2
+// https://github.com/mapbox/earcut/tree/v3.0.2
+
+function earcut(data, holeIndices, dim = 2) {
+
+    const hasHoles = holeIndices && holeIndices.length;
+    const outerLen = hasHoles ? holeIndices[0] * dim : data.length;
+    let outerNode = linkedList(data, 0, outerLen, dim, true);
+    const triangles = [];
+
+    if (!outerNode || outerNode.next === outerNode.prev) return triangles;
+
+    let minX, minY, invSize;
+
+    if (hasHoles) outerNode = eliminateHoles(data, holeIndices, outerNode, dim);
+
+    // if the shape is not too simple, we'll use z-order curve hash later; calculate polygon bbox
+    if (data.length > 80 * dim) {
+        minX = data[0];
+        minY = data[1];
+        let maxX = minX;
+        let maxY = minY;
+
+        for (let i = dim; i < outerLen; i += dim) {
+            const x = data[i];
+            const y = data[i + 1];
+            if (x < minX) minX = x;
+            if (y < minY) minY = y;
+            if (x > maxX) maxX = x;
+            if (y > maxY) maxY = y;
+        }
+
+        // minX, minY and invSize are later used to transform coords into integers for z-order calculation
+        invSize = Math.max(maxX - minX, maxY - minY);
+        invSize = invSize !== 0 ? 32767 / invSize : 0;
+    }
+
+    earcutLinked(outerNode, triangles, dim, minX, minY, invSize, 0);
+
+    return triangles;
+}
+
+// create a circular doubly linked list from polygon points in the specified winding order
+function linkedList(data, start, end, dim, clockwise) {
+    let last;
+
+    if (clockwise === (signedArea(data, start, end, dim) > 0)) {
+        for (let i = start; i < end; i += dim) last = insertNode(i / dim | 0, data[i], data[i + 1], last);
+    } else {
+        for (let i = end - dim; i >= start; i -= dim) last = insertNode(i / dim | 0, data[i], data[i + 1], last);
+    }
+
+    if (last && equals(last, last.next)) {
+        removeNode(last);
+        last = last.next;
+    }
+
+    return last;
+}
+
+// eliminate colinear or duplicate points
+function filterPoints(start, end) {
+    if (!start) return start;
+    if (!end) end = start;
+
+    let p = start,
+        again;
+    do {
+        again = false;
+
+        if (!p.steiner && (equals(p, p.next) || area(p.prev, p, p.next) === 0)) {
+            removeNode(p);
+            p = end = p.prev;
+            if (p === p.next) break;
+            again = true;
+
+        } else {
+            p = p.next;
+        }
+    } while (again || p !== end);
+
+    return end;
+}
+
+// main ear slicing loop which triangulates a polygon (given as a linked list)
+function earcutLinked(ear, triangles, dim, minX, minY, invSize, pass) {
+    if (!ear) return;
+
+    // interlink polygon nodes in z-order
+    if (!pass && invSize) indexCurve(ear, minX, minY, invSize);
+
+    let stop = ear;
+
+    // iterate through ears, slicing them one by one
+    while (ear.prev !== ear.next) {
+        const prev = ear.prev;
+        const next = ear.next;
+
+        if (invSize ? isEarHashed(ear, minX, minY, invSize) : isEar(ear)) {
+            triangles.push(prev.i, ear.i, next.i); // cut off the triangle
+
+            removeNode(ear);
+
+            // skipping the next vertex leads to less sliver triangles
+            ear = next.next;
+            stop = next.next;
+
+            continue;
+        }
+
+        ear = next;
+
+        // if we looped through the whole remaining polygon and can't find any more ears
+        if (ear === stop) {
+            // try filtering points and slicing again
+            if (!pass) {
+                earcutLinked(filterPoints(ear), triangles, dim, minX, minY, invSize, 1);
+
+            // if this didn't work, try curing all small self-intersections locally
+            } else if (pass === 1) {
+                ear = cureLocalIntersections(filterPoints(ear), triangles);
+                earcutLinked(ear, triangles, dim, minX, minY, invSize, 2);
+
+            // as a last resort, try splitting the remaining polygon into two
+            } else if (pass === 2) {
+                splitEarcut(ear, triangles, dim, minX, minY, invSize);
+            }
+
+            break;
+        }
+    }
+}
+
+// check whether a polygon node forms a valid ear with adjacent nodes
+function isEar(ear) {
+    const a = ear.prev,
+        b = ear,
+        c = ear.next;
+
+    if (area(a, b, c) >= 0) return false; // reflex, can't be an ear
+
+    // now make sure we don't have other points inside the potential ear
+    const ax = a.x, bx = b.x, cx = c.x, ay = a.y, by = b.y, cy = c.y;
+
+    // triangle bbox
+    const x0 = Math.min(ax, bx, cx),
+        y0 = Math.min(ay, by, cy),
+        x1 = Math.max(ax, bx, cx),
+        y1 = Math.max(ay, by, cy);
+
+    let p = c.next;
+    while (p !== a) {
+        if (p.x >= x0 && p.x <= x1 && p.y >= y0 && p.y <= y1 &&
+            pointInTriangleExceptFirst(ax, ay, bx, by, cx, cy, p.x, p.y) &&
+            area(p.prev, p, p.next) >= 0) return false;
+        p = p.next;
+    }
+
+    return true;
+}
+
+function isEarHashed(ear, minX, minY, invSize) {
+    const a = ear.prev,
+        b = ear,
+        c = ear.next;
+
+    if (area(a, b, c) >= 0) return false; // reflex, can't be an ear
+
+    const ax = a.x, bx = b.x, cx = c.x, ay = a.y, by = b.y, cy = c.y;
+
+    // triangle bbox
+    const x0 = Math.min(ax, bx, cx),
+        y0 = Math.min(ay, by, cy),
+        x1 = Math.max(ax, bx, cx),
+        y1 = Math.max(ay, by, cy);
+
+    // z-order range for the current triangle bbox;
+    const minZ = zOrder(x0, y0, minX, minY, invSize),
+        maxZ = zOrder(x1, y1, minX, minY, invSize);
+
+    let p = ear.prevZ,
+        n = ear.nextZ;
+
+    // look for points inside the triangle in both directions
+    while (p && p.z >= minZ && n && n.z <= maxZ) {
+        if (p.x >= x0 && p.x <= x1 && p.y >= y0 && p.y <= y1 && p !== a && p !== c &&
+            pointInTriangleExceptFirst(ax, ay, bx, by, cx, cy, p.x, p.y) && area(p.prev, p, p.next) >= 0) return false;
+        p = p.prevZ;
+
+        if (n.x >= x0 && n.x <= x1 && n.y >= y0 && n.y <= y1 && n !== a && n !== c &&
+            pointInTriangleExceptFirst(ax, ay, bx, by, cx, cy, n.x, n.y) && area(n.prev, n, n.next) >= 0) return false;
+        n = n.nextZ;
+    }
+
+    // look for remaining points in decreasing z-order
+    while (p && p.z >= minZ) {
+        if (p.x >= x0 && p.x <= x1 && p.y >= y0 && p.y <= y1 && p !== a && p !== c &&
+            pointInTriangleExceptFirst(ax, ay, bx, by, cx, cy, p.x, p.y) && area(p.prev, p, p.next) >= 0) return false;
+        p = p.prevZ;
+    }
+
+    // look for remaining points in increasing z-order
+    while (n && n.z <= maxZ) {
+        if (n.x >= x0 && n.x <= x1 && n.y >= y0 && n.y <= y1 && n !== a && n !== c &&
+            pointInTriangleExceptFirst(ax, ay, bx, by, cx, cy, n.x, n.y) && area(n.prev, n, n.next) >= 0) return false;
+        n = n.nextZ;
+    }
+
+    return true;
+}
+
+// go through all polygon nodes and cure small local self-intersections
+function cureLocalIntersections(start, triangles) {
+    let p = start;
+    do {
+        const a = p.prev,
+            b = p.next.next;
+
+        if (!equals(a, b) && intersects(a, p, p.next, b) && locallyInside(a, b) && locallyInside(b, a)) {
+
+            triangles.push(a.i, p.i, b.i);
+
+            // remove two nodes involved
+            removeNode(p);
+            removeNode(p.next);
+
+            p = start = b;
+        }
+        p = p.next;
+    } while (p !== start);
+
+    return filterPoints(p);
+}
+
+// try splitting polygon into two and triangulate them independently
+function splitEarcut(start, triangles, dim, minX, minY, invSize) {
+    // look for a valid diagonal that divides the polygon into two
+    let a = start;
+    do {
+        let b = a.next.next;
+        while (b !== a.prev) {
+            if (a.i !== b.i && isValidDiagonal(a, b)) {
+                // split the polygon in two by the diagonal
+                let c = splitPolygon(a, b);
+
+                // filter colinear points around the cuts
+                a = filterPoints(a, a.next);
+                c = filterPoints(c, c.next);
+
+                // run earcut on each half
+                earcutLinked(a, triangles, dim, minX, minY, invSize, 0);
+                earcutLinked(c, triangles, dim, minX, minY, invSize, 0);
+                return;
+            }
+            b = b.next;
+        }
+        a = a.next;
+    } while (a !== start);
+}
+
+// link every hole into the outer loop, producing a single-ring polygon without holes
+function eliminateHoles(data, holeIndices, outerNode, dim) {
+    const queue = [];
+
+    for (let i = 0, len = holeIndices.length; i < len; i++) {
+        const start = holeIndices[i] * dim;
+        const end = i < len - 1 ? holeIndices[i + 1] * dim : data.length;
+        const list = linkedList(data, start, end, dim, false);
+        if (list === list.next) list.steiner = true;
+        queue.push(getLeftmost(list));
+    }
+
+    queue.sort(compareXYSlope);
+
+    // process holes from left to right
+    for (let i = 0; i < queue.length; i++) {
+        outerNode = eliminateHole(queue[i], outerNode);
+    }
+
+    return outerNode;
+}
+
+function compareXYSlope(a, b) {
+    let result = a.x - b.x;
+    // when the left-most point of 2 holes meet at a vertex, sort the holes counterclockwise so that when we find
+    // the bridge to the outer shell is always the point that they meet at.
+    if (result === 0) {
+        result = a.y - b.y;
+        if (result === 0) {
+            const aSlope = (a.next.y - a.y) / (a.next.x - a.x);
+            const bSlope = (b.next.y - b.y) / (b.next.x - b.x);
+            result = aSlope - bSlope;
+        }
+    }
+    return result;
+}
+
+// find a bridge between vertices that connects hole with an outer ring and link it
+function eliminateHole(hole, outerNode) {
+    const bridge = findHoleBridge(hole, outerNode);
+    if (!bridge) {
+        return outerNode;
+    }
+
+    const bridgeReverse = splitPolygon(bridge, hole);
+
+    // filter collinear points around the cuts
+    filterPoints(bridgeReverse, bridgeReverse.next);
+    return filterPoints(bridge, bridge.next);
+}
+
+// David Eberly's algorithm for finding a bridge between hole and outer polygon
+function findHoleBridge(hole, outerNode) {
+    let p = outerNode;
+    const hx = hole.x;
+    const hy = hole.y;
+    let qx = -Infinity;
+    let m;
+
+    // find a segment intersected by a ray from the hole's leftmost point to the left;
+    // segment's endpoint with lesser x will be potential connection point
+    // unless they intersect at a vertex, then choose the vertex
+    if (equals(hole, p)) return p;
+    do {
+        if (equals(hole, p.next)) return p.next;
+        else if (hy <= p.y && hy >= p.next.y && p.next.y !== p.y) {
+            const x = p.x + (hy - p.y) * (p.next.x - p.x) / (p.next.y - p.y);
+            if (x <= hx && x > qx) {
+                qx = x;
+                m = p.x < p.next.x ? p : p.next;
+                if (x === hx) return m; // hole touches outer segment; pick leftmost endpoint
+            }
+        }
+        p = p.next;
+    } while (p !== outerNode);
+
+    if (!m) return null;
+
+    // look for points inside the triangle of hole point, segment intersection and endpoint;
+    // if there are no points found, we have a valid connection;
+    // otherwise choose the point of the minimum angle with the ray as connection point
+
+    const stop = m;
+    const mx = m.x;
+    const my = m.y;
+    let tanMin = Infinity;
+
+    p = m;
+
+    do {
+        if (hx >= p.x && p.x >= mx && hx !== p.x &&
+                pointInTriangle(hy < my ? hx : qx, hy, mx, my, hy < my ? qx : hx, hy, p.x, p.y)) {
+
+            const tan = Math.abs(hy - p.y) / (hx - p.x); // tangential
+
+            if (locallyInside(p, hole) &&
+                (tan < tanMin || (tan === tanMin && (p.x > m.x || (p.x === m.x && sectorContainsSector(m, p)))))) {
+                m = p;
+                tanMin = tan;
+            }
+        }
+
+        p = p.next;
+    } while (p !== stop);
+
+    return m;
+}
+
+// whether sector in vertex m contains sector in vertex p in the same coordinates
+function sectorContainsSector(m, p) {
+    return area(m.prev, m, p.prev) < 0 && area(p.next, m, m.next) < 0;
+}
+
+// interlink polygon nodes in z-order
+function indexCurve(start, minX, minY, invSize) {
+    let p = start;
+    do {
+        if (p.z === 0) p.z = zOrder(p.x, p.y, minX, minY, invSize);
+        p.prevZ = p.prev;
+        p.nextZ = p.next;
+        p = p.next;
+    } while (p !== start);
+
+    p.prevZ.nextZ = null;
+    p.prevZ = null;
+
+    sortLinked(p);
+}
+
+// Simon Tatham's linked list merge sort algorithm
+// http://www.chiark.greenend.org.uk/~sgtatham/algorithms/listsort.html
+function sortLinked(list) {
+    let numMerges;
+    let inSize = 1;
+
+    do {
+        let p = list;
+        let e;
+        list = null;
+        let tail = null;
+        numMerges = 0;
+
+        while (p) {
+            numMerges++;
+            let q = p;
+            let pSize = 0;
+            for (let i = 0; i < inSize; i++) {
+                pSize++;
+                q = q.nextZ;
+                if (!q) break;
+            }
+            let qSize = inSize;
+
+            while (pSize > 0 || (qSize > 0 && q)) {
+
+                if (pSize !== 0 && (qSize === 0 || !q || p.z <= q.z)) {
+                    e = p;
+                    p = p.nextZ;
+                    pSize--;
+                } else {
+                    e = q;
+                    q = q.nextZ;
+                    qSize--;
+                }
+
+                if (tail) tail.nextZ = e;
+                else list = e;
+
+                e.prevZ = tail;
+                tail = e;
+            }
+
+            p = q;
+        }
+
+        tail.nextZ = null;
+        inSize *= 2;
+
+    } while (numMerges > 1);
+
+    return list;
+}
+
+// z-order of a point given coords and inverse of the longer side of data bbox
+function zOrder(x, y, minX, minY, invSize) {
+    // coords are transformed into non-negative 15-bit integer range
+    x = (x - minX) * invSize | 0;
+    y = (y - minY) * invSize | 0;
+
+    x = (x | (x << 8)) & 0x00FF00FF;
+    x = (x | (x << 4)) & 0x0F0F0F0F;
+    x = (x | (x << 2)) & 0x33333333;
+    x = (x | (x << 1)) & 0x55555555;
+
+    y = (y | (y << 8)) & 0x00FF00FF;
+    y = (y | (y << 4)) & 0x0F0F0F0F;
+    y = (y | (y << 2)) & 0x33333333;
+    y = (y | (y << 1)) & 0x55555555;
+
+    return x | (y << 1);
+}
+
+// find the leftmost node of a polygon ring
+function getLeftmost(start) {
+    let p = start,
+        leftmost = start;
+    do {
+        if (p.x < leftmost.x || (p.x === leftmost.x && p.y < leftmost.y)) leftmost = p;
+        p = p.next;
+    } while (p !== start);
+
+    return leftmost;
+}
+
+// check if a point lies within a convex triangle
+function pointInTriangle(ax, ay, bx, by, cx, cy, px, py) {
+    return (cx - px) * (ay - py) >= (ax - px) * (cy - py) &&
+           (ax - px) * (by - py) >= (bx - px) * (ay - py) &&
+           (bx - px) * (cy - py) >= (cx - px) * (by - py);
+}
+
+// check if a point lies within a convex triangle but false if its equal to the first point of the triangle
+function pointInTriangleExceptFirst(ax, ay, bx, by, cx, cy, px, py) {
+    return !(ax === px && ay === py) && pointInTriangle(ax, ay, bx, by, cx, cy, px, py);
+}
+
+// check if a diagonal between two polygon nodes is valid (lies in polygon interior)
+function isValidDiagonal(a, b) {
+    return a.next.i !== b.i && a.prev.i !== b.i && !intersectsPolygon(a, b) && // doesn't intersect other edges
+           (locallyInside(a, b) && locallyInside(b, a) && middleInside(a, b) && // locally visible
+            (area(a.prev, a, b.prev) || area(a, b.prev, b)) || // does not create opposite-facing sectors
+            equals(a, b) && area(a.prev, a, a.next) > 0 && area(b.prev, b, b.next) > 0); // special zero-length case
+}
+
+// signed area of a triangle
+function area(p, q, r) {
+    return (q.y - p.y) * (r.x - q.x) - (q.x - p.x) * (r.y - q.y);
+}
+
+// check if two points are equal
+function equals(p1, p2) {
+    return p1.x === p2.x && p1.y === p2.y;
+}
+
+// check if two segments intersect
+function intersects(p1, q1, p2, q2) {
+    const o1 = sign(area(p1, q1, p2));
+    const o2 = sign(area(p1, q1, q2));
+    const o3 = sign(area(p2, q2, p1));
+    const o4 = sign(area(p2, q2, q1));
+
+    if (o1 !== o2 && o3 !== o4) return true; // general case
+
+    if (o1 === 0 && onSegment(p1, p2, q1)) return true; // p1, q1 and p2 are collinear and p2 lies on p1q1
+    if (o2 === 0 && onSegment(p1, q2, q1)) return true; // p1, q1 and q2 are collinear and q2 lies on p1q1
+    if (o3 === 0 && onSegment(p2, p1, q2)) return true; // p2, q2 and p1 are collinear and p1 lies on p2q2
+    if (o4 === 0 && onSegment(p2, q1, q2)) return true; // p2, q2 and q1 are collinear and q1 lies on p2q2
+
+    return false;
+}
+
+// for collinear points p, q, r, check if point q lies on segment pr
+function onSegment(p, q, r) {
+    return q.x <= Math.max(p.x, r.x) && q.x >= Math.min(p.x, r.x) && q.y <= Math.max(p.y, r.y) && q.y >= Math.min(p.y, r.y);
+}
+
+function sign(num) {
+    return num > 0 ? 1 : num < 0 ? -1 : 0;
+}
+
+// check if a polygon diagonal intersects any polygon segments
+function intersectsPolygon(a, b) {
+    let p = a;
+    do {
+        if (p.i !== a.i && p.next.i !== a.i && p.i !== b.i && p.next.i !== b.i &&
+                intersects(p, p.next, a, b)) return true;
+        p = p.next;
+    } while (p !== a);
+
+    return false;
+}
+
+// check if a polygon diagonal is locally inside the polygon
+function locallyInside(a, b) {
+    return area(a.prev, a, a.next) < 0 ?
+        area(a, b, a.next) >= 0 && area(a, a.prev, b) >= 0 :
+        area(a, b, a.prev) < 0 || area(a, a.next, b) < 0;
+}
+
+// check if the middle point of a polygon diagonal is inside the polygon
+function middleInside(a, b) {
+    let p = a;
+    let inside = false;
+    const px = (a.x + b.x) / 2;
+    const py = (a.y + b.y) / 2;
+    do {
+        if (((p.y > py) !== (p.next.y > py)) && p.next.y !== p.y &&
+                (px < (p.next.x - p.x) * (py - p.y) / (p.next.y - p.y) + p.x))
+            inside = !inside;
+        p = p.next;
+    } while (p !== a);
+
+    return inside;
+}
+
+// link two polygon vertices with a bridge; if the vertices belong to the same ring, it splits polygon into two;
+// if one belongs to the outer ring and another to a hole, it merges it into a single ring
+function splitPolygon(a, b) {
+    const a2 = createNode(a.i, a.x, a.y),
+        b2 = createNode(b.i, b.x, b.y),
+        an = a.next,
+        bp = b.prev;
+
+    a.next = b;
+    b.prev = a;
+
+    a2.next = an;
+    an.prev = a2;
+
+    b2.next = a2;
+    a2.prev = b2;
+
+    bp.next = b2;
+    b2.prev = bp;
+
+    return b2;
+}
+
+// create a node and optionally link it with previous one (in a circular doubly linked list)
+function insertNode(i, x, y, last) {
+    const p = createNode(i, x, y);
+
+    if (!last) {
+        p.prev = p;
+        p.next = p;
+
+    } else {
+        p.next = last.next;
+        p.prev = last;
+        last.next.prev = p;
+        last.next = p;
+    }
+    return p;
+}
+
+function removeNode(p) {
+    p.next.prev = p.prev;
+    p.prev.next = p.next;
+
+    if (p.prevZ) p.prevZ.nextZ = p.nextZ;
+    if (p.nextZ) p.nextZ.prevZ = p.prevZ;
+}
+
+function createNode(i, x, y) {
+    return {
+        i, // vertex index in coordinates array
+        x, y, // vertex coordinates
+        prev: null, // previous and next vertex nodes in a polygon ring
+        next: null,
+        z: 0, // z-order curve value
+        prevZ: null, // previous and next nodes in z-order
+        nextZ: null,
+        steiner: false // indicates whether this is a steiner point
+    };
+}
+
+// return a percentage difference between the polygon area and its triangulation area;
+// used to verify correctness of triangulation
+function deviation(data, holeIndices, dim, triangles) {
+    const hasHoles = holeIndices && holeIndices.length;
+    const outerLen = hasHoles ? holeIndices[0] * dim : data.length;
+
+    let polygonArea = Math.abs(signedArea(data, 0, outerLen, dim));
+    if (hasHoles) {
+        for (let i = 0, len = holeIndices.length; i < len; i++) {
+            const start = holeIndices[i] * dim;
+            const end = i < len - 1 ? holeIndices[i + 1] * dim : data.length;
+            polygonArea -= Math.abs(signedArea(data, start, end, dim));
+        }
+    }
+
+    let trianglesArea = 0;
+    for (let i = 0; i < triangles.length; i += 3) {
+        const a = triangles[i] * dim;
+        const b = triangles[i + 1] * dim;
+        const c = triangles[i + 2] * dim;
+        trianglesArea += Math.abs(
+            (data[a] - data[c]) * (data[b + 1] - data[a + 1]) -
+            (data[a] - data[b]) * (data[c + 1] - data[a + 1]));
+    }
+
+    return polygonArea === 0 && trianglesArea === 0 ? 0 :
+        Math.abs((trianglesArea - polygonArea) / polygonArea);
+}
+
+function signedArea(data, start, end, dim) {
+    let sum = 0;
+    for (let i = start, j = end - dim; i < end; i += dim) {
+        sum += (data[j] - data[i]) * (data[i + 1] + data[j + 1]);
+        j = i;
+    }
+    return sum;
+}
+
+// turn a polygon in a multi-dimensional array form (e.g. as in GeoJSON) into a form Earcut accepts
+function flatten(data) {
+    const vertices = [];
+    const holes = [];
+    const dimensions = data[0][0].length;
+    let holeIndex = 0;
+    let prevLen = 0;
+
+    for (const ring of data) {
+        for (const p of ring) {
+            for (let d = 0; d < dimensions; d++) vertices.push(p[d]);
+        }
+        if (prevLen) {
+            holeIndex += prevLen;
+            holes.push(holeIndex);
+        }
+        prevLen = ring.length;
+    }
+    return {vertices, holes, dimensions};
+}
+
+// geo.mjs
+
+function area2(ring){return ring.reduce((s,p,i)=>s+p[0]*ring[(i+1)%ring.length][1]-ring[(i+1)%ring.length][0]*p[1],0)/2;}
+function contains(ring,x,z){let yes=false;for(let i=0,j=ring.length-1;i<ring.length;j=i++){const a=ring[i],b=ring[j];if((a[1]>z)!==(b[1]>z)&&x<(b[0]-a[0])*(z-a[1])/(b[1]-a[1])+a[0])yes=!yes;}return yes;}
+function polygonGroups(rings){const sorted=[...rings].sort((a,b)=>Math.abs(area2(b))-Math.abs(area2(a))),groups=[];for(const ring of sorted){const parent=groups.filter(g=>contains(g.outer,ring[0][0],ring[0][1])).sort((a,b)=>Math.abs(area2(a.outer))-Math.abs(area2(b.outer)))[0];if(parent&&Math.sign(area2(parent.outer))!==Math.sign(area2(ring)))parent.holes.push(ring);else groups.push({outer:ring,holes:[]});}return groups;}
+function triangulateRings(rings){const triangles=[];for(const group of polygonGroups(rings)){const points=[...group.outer],holes=[];for(const h of group.holes){holes.push(points.length);points.push(...h);}const indices=earcut(points.flat(),holes,2);for(let k=0;k<indices.length;k+=3)triangles.push([points[indices[k]],points[indices[k+1]],points[indices[k+2]]]);}return triangles;}
+function boundsOf(rings){const b=[Infinity,Infinity,-Infinity,-Infinity];for(const r of rings)for(const p of r){b[0]=Math.min(b[0],p[0]);b[1]=Math.min(b[1],p[1]);b[2]=Math.max(b[2],p[0]);b[3]=Math.max(b[3],p[1]);}return b;}
+function elevationAt(data,x,z){const t=data.terrain,b=data.bounds,u=Math.max(0,Math.min(t.width-1,(x-b[0])/(b[2]-b[0])*t.width-.5)),v=Math.max(0,Math.min(t.height-1,(z-b[1])/(b[3]-b[1])*t.height-.5)),i=Math.floor(u),j=Math.floor(v),dx=u-i,dz=v-j;const sample=(a,c)=>t.values[Math.min(t.height-1,c)*t.width+Math.min(t.width-1,a)];return sample(i,j)*(1-dx)*(1-dz)+sample(i+1,j)*dx*(1-dz)+sample(i,j+1)*(1-dx)*dz+sample(i+1,j+1)*dx*dz;}
+function lonLat(data,x,z){const p=data.projection,mx=p.originMercator[0]+x/p.cosLatitude,my=p.originMercator[1]-z/p.cosLatitude;return[mx/p.radius*180/Math.PI,(2*Math.atan(Math.exp(my/p.radius))-Math.PI/2)*180/Math.PI];}
+function localFromLonLat(data,lon,lat){const p=data.projection,mx=p.radius*lon*Math.PI/180,my=p.radius*Math.log(Math.tan(Math.PI/4+lat*Math.PI/360));return[(mx-p.originMercator[0])*p.cosLatitude,-(my-p.originMercator[1])*p.cosLatitude];}
+function prepareTown(data){for(const b of data.buildings){b.bounds=boundsOf(b.rings);b.center=[(b.bounds[0]+b.bounds[2])/2,(b.bounds[1]+b.bounds[3])/2];}for(const road of data.roads){road.bounds=boundsOf([road.points]);road.center=[(road.bounds[0]+road.bounds[2])/2,(road.bounds[1]+road.bounds[3])/2];}
+ const main=data.roads.filter(r=>/main street/i.test(r.name)),third=data.roads.filter(r=>/3rd street/i.test(r.name));let intersection=null,best=Infinity;const thirdNodes=new Set(third.flatMap(r=>r.points.map(p=>p.join(','))));for(const r of main)for(const p of r.points)if(thirdNodes.has(p.join(','))&&Math.hypot(...p)<best){intersection=p;best=Math.hypot(...p);}
+ const find=expression=>data.buildings.find(b=>expression.test(b.name));data.checkpoints={downtown:{center:intersection||[0,0],span:1300,label:'Main & Third'},city:{center:[0,0],span:8500,label:'8 km reference window'},campus:{center:find(/Old Centre|Norton Center|Olin Hall/i)?.center||[-700,-200],span:1500,label:'Centre College area'},south:{center:[0,2100],span:2700,label:'South Danville'}};return data;
+}
+function pickBuilding(data,x,z){for(const b of data.buildings){const box=b.bounds;if(x<box[0]||x>box[2]||z<box[1]||z>box[3])continue;let inside=false;for(const ring of b.rings)if(contains(ring,x,z))inside=!inside;if(inside)return b;}return null;}
+
+// mesh.mjs
+
+function buildMapMeshes(data){const terrain=[],roads=[],buildings=[],origin=elevationAt(data,0,0);let invalid=0;
+ const point=(x,z,offset=0)=>[x,elevationAt(data,x,z)-origin+offset,z];
+ function tri(target,a,b,c,color,type,grounds){const u=b.map((x,i)=>x-a[i]),v=c.map((x,i)=>x-a[i]),n=[u[1]*v[2]-u[2]*v[1],u[2]*v[0]-u[0]*v[2],u[0]*v[1]-u[1]*v[0]],length=Math.hypot(...n);if(length<1e-7)return;for(let k=0;k<3;k++)target.push(...[a,b,c][k],...n.map(x=>x/length),...color,type,grounds?grounds[k]:[a,b,c][k][1]);}
+ function groundTri(target,a,b,c,color,type){if((b[2]-a[2])*(c[0]-a[0])-(b[0]-a[0])*(c[2]-a[2])<0)[b,c]=[c,b];tri(target,a,b,c,color,type);}
+ const N=128,b=data.bounds;for(let j=0;j<N;j++)for(let i=0;i<N;i++){const x=b[0]+i/N*(b[2]-b[0]),z=b[1]+j/N*(b[3]-b[1]),xx=b[0]+(i+1)/N*(b[2]-b[0]),zz=b[1]+(j+1)/N*(b[3]-b[1]);const a=point(x,z),c=point(xx,zz);groundTri(terrain,a,point(xx,z),c,[.47,.57,.43],0);groundTri(terrain,a,c,point(x,zz),[.47,.57,.43],0);}
+ for(const road of data.roads){const width=/main|lexington|stanford|perryville|bypass|highway/i.test(road.name)?10:6.5;for(let j=1;j<road.points.length;j++){const a=road.points[j-1],c=road.points[j],length=Math.hypot(c[0]-a[0],c[1]-a[1]);if(length<.1)continue;const nx=-(c[1]-a[1])/length*width/2,nz=(c[0]-a[0])/length*width/2,steps=Math.max(1,Math.ceil(length/30));for(let k=0;k<steps;k++){const p=a.map((x,i)=>x+(c[i]-x)*k/steps),q=a.map((x,i)=>x+(c[i]-x)*(k+1)/steps),A=point(p[0]+nx,p[1]+nz,.32),B=point(p[0]-nx,p[1]-nz,.32),C=point(q[0]-nx,q[1]-nz,.32),D=point(q[0]+nx,q[1]+nz,.32);groundTri(roads,A,B,C,[.29,.32,.33],3);groundTri(roads,A,C,D,[.29,.32,.33],3);}}}
+ for(const building of data.buildings){const topBase=Math.max(...building.rings.flat().map(p=>elevationAt(data,...p)-origin)),top=topBase+building.height,known=building.heightBasis==='source-height',roof=known?[.66,.68,.65]:[.75,.56,.32],wall=known?[.60,.64,.61]:[.69,.52,.32];let triangles;try{triangles=triangulateRings(building.rings);}catch{invalid++;continue;}
+  for(const t of triangles){let [a,b,c]=t.map(p=>[p[0],top,p[1]]);if((b[2]-a[2])*(c[0]-a[0])-(b[0]-a[0])*(c[2]-a[2])<0)[b,c]=[c,b];tri(buildings,a,b,c,roof,1,[topBase,topBase,topBase]);}
+  for(const ring of building.rings)for(let k=0;k<ring.length;k++){const p=ring[k],q=ring[(k+1)%ring.length],a=point(p[0],p[1],-.25),b=point(q[0],q[1],-.25),c=[q[0],top,q[1]],d=[p[0],top,p[1]];tri(buildings,a,c,b,wall,2,[a[1],topBase,b[1]]);tri(buildings,a,d,c,wall,2,[a[1],topBase,topBase]);}
+ }
+ const result={terrain:new Float32Array(terrain),roads:new Float32Array(roads),buildings:new Float32Array(buildings),originElevation:origin,stats:{buildingCount:data.buildings.length,roadPathCount:data.roads.length,failedBuildings:invalid,triangles:(terrain.length+roads.length+buildings.length)/33,gpuBufferBytes:(terrain.length+roads.length+buildings.length)*4}};return result;
+}
+
+// renderer.mjs
+
+const mapVS=`#version 300 es
+precision highp float;
+layout(location=0) in vec3 position;layout(location=1) in vec3 normal;layout(location=2) in vec3 color;layout(location=3) in float kind;layout(location=4) in float ground;
+uniform mat4 vp;uniform float terrainScale,logFar;out vec3 world,n,base;flat out int type;out float logDepth;
+void main(){world=position;world.y=position.y-ground+ground*terrainScale;n=normal;base=color;type=int(kind+.5);gl_Position=vp*vec4(world,1);logDepth=1.+gl_Position.w;gl_Position.z=(log2(max(.000001,logDepth))*2.*logFar-1.)*gl_Position.w;}`;
+const mapFS=`#version 300 es
+precision highp float;
+in vec3 world,n,base;flat in int type;in float logDepth;out vec4 outColor;
+uniform sampler2D cityImage,detailImage;uniform bool aerial,detailReady;uniform vec4 bounds,detailBounds;uniform float logFar;
+void main(){if(world.x<bounds.x||world.z<bounds.y||world.x>bounds.z||world.z>bounds.w)discard;vec3 c=base;if(type==0&&aerial){vec2 uv=(world.xz-bounds.xy)/(bounds.zw-bounds.xy);c=texture(cityImage,uv).rgb;if(detailReady&&world.x>detailBounds.x&&world.z>detailBounds.y&&world.x<detailBounds.z&&world.z<detailBounds.w)c=texture(detailImage,(world.xz-detailBounds.xy)/(detailBounds.zw-detailBounds.xy)).rgb;outColor=vec4(c,1);}else{float light=.48+.52*max(dot(normalize(n),normalize(vec3(-.45,.85,.35))),0.);outColor=vec4(c*light,1);}gl_FragDepth=log2(logDepth)*logFar;}`;
+class MapRenderer {
+ constructor(canvas,meshes,data){const gl=this.gl=canvas.getContext('webgl2',{antialias:true,alpha:false,powerPreference:'high-performance'});if(!gl)throw Error('WebGL2 is unavailable');this.canvas=canvas;this.data=data;this.buffers={};
+  const shader=(type,code)=>{const s=gl.createShader(type);gl.shaderSource(s,code);gl.compileShader(s);if(!gl.getShaderParameter(s,gl.COMPILE_STATUS))throw Error(gl.getShaderInfoLog(s));return s;};const program=this.program=gl.createProgram();gl.attachShader(program,shader(gl.VERTEX_SHADER,mapVS));gl.attachShader(program,shader(gl.FRAGMENT_SHADER,mapFS));gl.linkProgram(program);if(!gl.getProgramParameter(program,gl.LINK_STATUS))throw Error(gl.getProgramInfoLog(program));
+  for(const name of['terrain','roads','buildings']){const vao=gl.createVertexArray();gl.bindVertexArray(vao);const buffer=gl.createBuffer();gl.bindBuffer(gl.ARRAY_BUFFER,buffer);gl.bufferData(gl.ARRAY_BUFFER,meshes[name],gl.STATIC_DRAW);for(const [i,size,offset]of[[0,3,0],[1,3,12],[2,3,24],[3,1,36],[4,1,40]]){gl.enableVertexAttribArray(i);gl.vertexAttribPointer(i,size,gl.FLOAT,false,44,offset);}this.buffers[name]={vao,buffer,count:meshes[name].length/11};}
+  this.textures={};for(const key of['city','detail']){const t=gl.createTexture();gl.bindTexture(gl.TEXTURE_2D,t);gl.texImage2D(gl.TEXTURE_2D,0,gl.RGBA,1,1,0,gl.RGBA,gl.UNSIGNED_BYTE,new Uint8Array([160,180,150,255]));this.textures[key]=t;}
+  const ext=gl.getExtension('WEBGL_debug_renderer_info');this.device=ext?gl.getParameter(ext.UNMASKED_RENDERER_WEBGL):gl.getParameter(gl.RENDERER);
+ }
+ image(key,image){const gl=this.gl;gl.bindTexture(gl.TEXTURE_2D,this.textures[key]);gl.pixelStorei(gl.UNPACK_FLIP_Y_WEBGL,false);gl.texImage2D(gl.TEXTURE_2D,0,gl.RGBA,gl.RGBA,gl.UNSIGNED_BYTE,image);gl.generateMipmap(gl.TEXTURE_2D);gl.texParameteri(gl.TEXTURE_2D,gl.TEXTURE_MIN_FILTER,gl.LINEAR_MIPMAP_LINEAR);gl.texParameteri(gl.TEXTURE_2D,gl.TEXTURE_MAG_FILTER,gl.LINEAR);gl.texParameteri(gl.TEXTURE_2D,gl.TEXTURE_WRAP_S,gl.CLAMP_TO_EDGE);gl.texParameteri(gl.TEXTURE_2D,gl.TEXTURE_WRAP_T,gl.CLAMP_TO_EDGE);}
+ render(eye,target,options){const gl=this.gl,c=this.canvas,ratio=Math.min(devicePixelRatio,1.5);const w=Math.round(innerWidth*ratio),h=Math.round(innerHeight*ratio);if(c.width!==w||c.height!==h){c.width=w;c.height=h;}gl.viewport(0,0,w,h);gl.clearColor(.67,.76,.79,1);gl.clear(gl.COLOR_BUFFER_BIT|gl.DEPTH_BUFFER_BIT);gl.enable(gl.DEPTH_TEST);gl.disable(gl.CULL_FACE);gl.useProgram(this.program);this.vp=mul(perspective(55*Math.PI/180,w/h,.5,50000),lookAt(eye,target));const loc=n=>gl.getUniformLocation(this.program,n);gl.uniformMatrix4fv(loc('vp'),false,this.vp);gl.uniform1f(loc('logFar'),1/Math.log2(50001));gl.uniform1f(loc('terrainScale'),options.terrain?1:0);gl.uniform4fv(loc('bounds'),this.data.bounds);gl.uniform4fv(loc('detailBounds'),this.data.imagery.downtownBounds);gl.uniform1i(loc('aerial'),options.aerial);gl.uniform1i(loc('detailReady'),!!options.detail);
+  for(const [i,key]of['city','detail'].entries()){gl.activeTexture(gl.TEXTURE0+i);gl.bindTexture(gl.TEXTURE_2D,this.textures[key]);gl.uniform1i(loc(key==='city'?'cityImage':'detailImage'),i);}let draws=0;for(const name of['terrain','roads','buildings']){if(name==='buildings'&&!options.buildings||name==='roads'&&options.aerial)continue;const b=this.buffers[name];gl.bindVertexArray(b.vao);gl.drawArrays(gl.TRIANGLES,0,b.count);draws++;}return{drawCalls:draws,width:w,height:h};
+ }
+}
+
+const mapWorkerSource="\n// vendor/earcut.mjs\n/* eslint-disable */\n// copy of mapbox/earcut version 3.0.2\n// https://github.com/mapbox/earcut/tree/v3.0.2\n\nfunction earcut(data, holeIndices, dim = 2) {\n\n    const hasHoles = holeIndices && holeIndices.length;\n    const outerLen = hasHoles ? holeIndices[0] * dim : data.length;\n    let outerNode = linkedList(data, 0, outerLen, dim, true);\n    const triangles = [];\n\n    if (!outerNode || outerNode.next === outerNode.prev) return triangles;\n\n    let minX, minY, invSize;\n\n    if (hasHoles) outerNode = eliminateHoles(data, holeIndices, outerNode, dim);\n\n    // if the shape is not too simple, we'll use z-order curve hash later; calculate polygon bbox\n    if (data.length > 80 * dim) {\n        minX = data[0];\n        minY = data[1];\n        let maxX = minX;\n        let maxY = minY;\n\n        for (let i = dim; i < outerLen; i += dim) {\n            const x = data[i];\n            const y = data[i + 1];\n            if (x < minX) minX = x;\n            if (y < minY) minY = y;\n            if (x > maxX) maxX = x;\n            if (y > maxY) maxY = y;\n        }\n\n        // minX, minY and invSize are later used to transform coords into integers for z-order calculation\n        invSize = Math.max(maxX - minX, maxY - minY);\n        invSize = invSize !== 0 ? 32767 / invSize : 0;\n    }\n\n    earcutLinked(outerNode, triangles, dim, minX, minY, invSize, 0);\n\n    return triangles;\n}\n\n// create a circular doubly linked list from polygon points in the specified winding order\nfunction linkedList(data, start, end, dim, clockwise) {\n    let last;\n\n    if (clockwise === (signedArea(data, start, end, dim) > 0)) {\n        for (let i = start; i < end; i += dim) last = insertNode(i / dim | 0, data[i], data[i + 1], last);\n    } else {\n        for (let i = end - dim; i >= start; i -= dim) last = insertNode(i / dim | 0, data[i], data[i + 1], last);\n    }\n\n    if (last && equals(last, last.next)) {\n        removeNode(last);\n        last = last.next;\n    }\n\n    return last;\n}\n\n// eliminate colinear or duplicate points\nfunction filterPoints(start, end) {\n    if (!start) return start;\n    if (!end) end = start;\n\n    let p = start,\n        again;\n    do {\n        again = false;\n\n        if (!p.steiner && (equals(p, p.next) || area(p.prev, p, p.next) === 0)) {\n            removeNode(p);\n            p = end = p.prev;\n            if (p === p.next) break;\n            again = true;\n\n        } else {\n            p = p.next;\n        }\n    } while (again || p !== end);\n\n    return end;\n}\n\n// main ear slicing loop which triangulates a polygon (given as a linked list)\nfunction earcutLinked(ear, triangles, dim, minX, minY, invSize, pass) {\n    if (!ear) return;\n\n    // interlink polygon nodes in z-order\n    if (!pass && invSize) indexCurve(ear, minX, minY, invSize);\n\n    let stop = ear;\n\n    // iterate through ears, slicing them one by one\n    while (ear.prev !== ear.next) {\n        const prev = ear.prev;\n        const next = ear.next;\n\n        if (invSize ? isEarHashed(ear, minX, minY, invSize) : isEar(ear)) {\n            triangles.push(prev.i, ear.i, next.i); // cut off the triangle\n\n            removeNode(ear);\n\n            // skipping the next vertex leads to less sliver triangles\n            ear = next.next;\n            stop = next.next;\n\n            continue;\n        }\n\n        ear = next;\n\n        // if we looped through the whole remaining polygon and can't find any more ears\n        if (ear === stop) {\n            // try filtering points and slicing again\n            if (!pass) {\n                earcutLinked(filterPoints(ear), triangles, dim, minX, minY, invSize, 1);\n\n            // if this didn't work, try curing all small self-intersections locally\n            } else if (pass === 1) {\n                ear = cureLocalIntersections(filterPoints(ear), triangles);\n                earcutLinked(ear, triangles, dim, minX, minY, invSize, 2);\n\n            // as a last resort, try splitting the remaining polygon into two\n            } else if (pass === 2) {\n                splitEarcut(ear, triangles, dim, minX, minY, invSize);\n            }\n\n            break;\n        }\n    }\n}\n\n// check whether a polygon node forms a valid ear with adjacent nodes\nfunction isEar(ear) {\n    const a = ear.prev,\n        b = ear,\n        c = ear.next;\n\n    if (area(a, b, c) >= 0) return false; // reflex, can't be an ear\n\n    // now make sure we don't have other points inside the potential ear\n    const ax = a.x, bx = b.x, cx = c.x, ay = a.y, by = b.y, cy = c.y;\n\n    // triangle bbox\n    const x0 = Math.min(ax, bx, cx),\n        y0 = Math.min(ay, by, cy),\n        x1 = Math.max(ax, bx, cx),\n        y1 = Math.max(ay, by, cy);\n\n    let p = c.next;\n    while (p !== a) {\n        if (p.x >= x0 && p.x <= x1 && p.y >= y0 && p.y <= y1 &&\n            pointInTriangleExceptFirst(ax, ay, bx, by, cx, cy, p.x, p.y) &&\n            area(p.prev, p, p.next) >= 0) return false;\n        p = p.next;\n    }\n\n    return true;\n}\n\nfunction isEarHashed(ear, minX, minY, invSize) {\n    const a = ear.prev,\n        b = ear,\n        c = ear.next;\n\n    if (area(a, b, c) >= 0) return false; // reflex, can't be an ear\n\n    const ax = a.x, bx = b.x, cx = c.x, ay = a.y, by = b.y, cy = c.y;\n\n    // triangle bbox\n    const x0 = Math.min(ax, bx, cx),\n        y0 = Math.min(ay, by, cy),\n        x1 = Math.max(ax, bx, cx),\n        y1 = Math.max(ay, by, cy);\n\n    // z-order range for the current triangle bbox;\n    const minZ = zOrder(x0, y0, minX, minY, invSize),\n        maxZ = zOrder(x1, y1, minX, minY, invSize);\n\n    let p = ear.prevZ,\n        n = ear.nextZ;\n\n    // look for points inside the triangle in both directions\n    while (p && p.z >= minZ && n && n.z <= maxZ) {\n        if (p.x >= x0 && p.x <= x1 && p.y >= y0 && p.y <= y1 && p !== a && p !== c &&\n            pointInTriangleExceptFirst(ax, ay, bx, by, cx, cy, p.x, p.y) && area(p.prev, p, p.next) >= 0) return false;\n        p = p.prevZ;\n\n        if (n.x >= x0 && n.x <= x1 && n.y >= y0 && n.y <= y1 && n !== a && n !== c &&\n            pointInTriangleExceptFirst(ax, ay, bx, by, cx, cy, n.x, n.y) && area(n.prev, n, n.next) >= 0) return false;\n        n = n.nextZ;\n    }\n\n    // look for remaining points in decreasing z-order\n    while (p && p.z >= minZ) {\n        if (p.x >= x0 && p.x <= x1 && p.y >= y0 && p.y <= y1 && p !== a && p !== c &&\n            pointInTriangleExceptFirst(ax, ay, bx, by, cx, cy, p.x, p.y) && area(p.prev, p, p.next) >= 0) return false;\n        p = p.prevZ;\n    }\n\n    // look for remaining points in increasing z-order\n    while (n && n.z <= maxZ) {\n        if (n.x >= x0 && n.x <= x1 && n.y >= y0 && n.y <= y1 && n !== a && n !== c &&\n            pointInTriangleExceptFirst(ax, ay, bx, by, cx, cy, n.x, n.y) && area(n.prev, n, n.next) >= 0) return false;\n        n = n.nextZ;\n    }\n\n    return true;\n}\n\n// go through all polygon nodes and cure small local self-intersections\nfunction cureLocalIntersections(start, triangles) {\n    let p = start;\n    do {\n        const a = p.prev,\n            b = p.next.next;\n\n        if (!equals(a, b) && intersects(a, p, p.next, b) && locallyInside(a, b) && locallyInside(b, a)) {\n\n            triangles.push(a.i, p.i, b.i);\n\n            // remove two nodes involved\n            removeNode(p);\n            removeNode(p.next);\n\n            p = start = b;\n        }\n        p = p.next;\n    } while (p !== start);\n\n    return filterPoints(p);\n}\n\n// try splitting polygon into two and triangulate them independently\nfunction splitEarcut(start, triangles, dim, minX, minY, invSize) {\n    // look for a valid diagonal that divides the polygon into two\n    let a = start;\n    do {\n        let b = a.next.next;\n        while (b !== a.prev) {\n            if (a.i !== b.i && isValidDiagonal(a, b)) {\n                // split the polygon in two by the diagonal\n                let c = splitPolygon(a, b);\n\n                // filter colinear points around the cuts\n                a = filterPoints(a, a.next);\n                c = filterPoints(c, c.next);\n\n                // run earcut on each half\n                earcutLinked(a, triangles, dim, minX, minY, invSize, 0);\n                earcutLinked(c, triangles, dim, minX, minY, invSize, 0);\n                return;\n            }\n            b = b.next;\n        }\n        a = a.next;\n    } while (a !== start);\n}\n\n// link every hole into the outer loop, producing a single-ring polygon without holes\nfunction eliminateHoles(data, holeIndices, outerNode, dim) {\n    const queue = [];\n\n    for (let i = 0, len = holeIndices.length; i < len; i++) {\n        const start = holeIndices[i] * dim;\n        const end = i < len - 1 ? holeIndices[i + 1] * dim : data.length;\n        const list = linkedList(data, start, end, dim, false);\n        if (list === list.next) list.steiner = true;\n        queue.push(getLeftmost(list));\n    }\n\n    queue.sort(compareXYSlope);\n\n    // process holes from left to right\n    for (let i = 0; i < queue.length; i++) {\n        outerNode = eliminateHole(queue[i], outerNode);\n    }\n\n    return outerNode;\n}\n\nfunction compareXYSlope(a, b) {\n    let result = a.x - b.x;\n    // when the left-most point of 2 holes meet at a vertex, sort the holes counterclockwise so that when we find\n    // the bridge to the outer shell is always the point that they meet at.\n    if (result === 0) {\n        result = a.y - b.y;\n        if (result === 0) {\n            const aSlope = (a.next.y - a.y) / (a.next.x - a.x);\n            const bSlope = (b.next.y - b.y) / (b.next.x - b.x);\n            result = aSlope - bSlope;\n        }\n    }\n    return result;\n}\n\n// find a bridge between vertices that connects hole with an outer ring and link it\nfunction eliminateHole(hole, outerNode) {\n    const bridge = findHoleBridge(hole, outerNode);\n    if (!bridge) {\n        return outerNode;\n    }\n\n    const bridgeReverse = splitPolygon(bridge, hole);\n\n    // filter collinear points around the cuts\n    filterPoints(bridgeReverse, bridgeReverse.next);\n    return filterPoints(bridge, bridge.next);\n}\n\n// David Eberly's algorithm for finding a bridge between hole and outer polygon\nfunction findHoleBridge(hole, outerNode) {\n    let p = outerNode;\n    const hx = hole.x;\n    const hy = hole.y;\n    let qx = -Infinity;\n    let m;\n\n    // find a segment intersected by a ray from the hole's leftmost point to the left;\n    // segment's endpoint with lesser x will be potential connection point\n    // unless they intersect at a vertex, then choose the vertex\n    if (equals(hole, p)) return p;\n    do {\n        if (equals(hole, p.next)) return p.next;\n        else if (hy <= p.y && hy >= p.next.y && p.next.y !== p.y) {\n            const x = p.x + (hy - p.y) * (p.next.x - p.x) / (p.next.y - p.y);\n            if (x <= hx && x > qx) {\n                qx = x;\n                m = p.x < p.next.x ? p : p.next;\n                if (x === hx) return m; // hole touches outer segment; pick leftmost endpoint\n            }\n        }\n        p = p.next;\n    } while (p !== outerNode);\n\n    if (!m) return null;\n\n    // look for points inside the triangle of hole point, segment intersection and endpoint;\n    // if there are no points found, we have a valid connection;\n    // otherwise choose the point of the minimum angle with the ray as connection point\n\n    const stop = m;\n    const mx = m.x;\n    const my = m.y;\n    let tanMin = Infinity;\n\n    p = m;\n\n    do {\n        if (hx >= p.x && p.x >= mx && hx !== p.x &&\n                pointInTriangle(hy < my ? hx : qx, hy, mx, my, hy < my ? qx : hx, hy, p.x, p.y)) {\n\n            const tan = Math.abs(hy - p.y) / (hx - p.x); // tangential\n\n            if (locallyInside(p, hole) &&\n                (tan < tanMin || (tan === tanMin && (p.x > m.x || (p.x === m.x && sectorContainsSector(m, p)))))) {\n                m = p;\n                tanMin = tan;\n            }\n        }\n\n        p = p.next;\n    } while (p !== stop);\n\n    return m;\n}\n\n// whether sector in vertex m contains sector in vertex p in the same coordinates\nfunction sectorContainsSector(m, p) {\n    return area(m.prev, m, p.prev) < 0 && area(p.next, m, m.next) < 0;\n}\n\n// interlink polygon nodes in z-order\nfunction indexCurve(start, minX, minY, invSize) {\n    let p = start;\n    do {\n        if (p.z === 0) p.z = zOrder(p.x, p.y, minX, minY, invSize);\n        p.prevZ = p.prev;\n        p.nextZ = p.next;\n        p = p.next;\n    } while (p !== start);\n\n    p.prevZ.nextZ = null;\n    p.prevZ = null;\n\n    sortLinked(p);\n}\n\n// Simon Tatham's linked list merge sort algorithm\n// http://www.chiark.greenend.org.uk/~sgtatham/algorithms/listsort.html\nfunction sortLinked(list) {\n    let numMerges;\n    let inSize = 1;\n\n    do {\n        let p = list;\n        let e;\n        list = null;\n        let tail = null;\n        numMerges = 0;\n\n        while (p) {\n            numMerges++;\n            let q = p;\n            let pSize = 0;\n            for (let i = 0; i < inSize; i++) {\n                pSize++;\n                q = q.nextZ;\n                if (!q) break;\n            }\n            let qSize = inSize;\n\n            while (pSize > 0 || (qSize > 0 && q)) {\n\n                if (pSize !== 0 && (qSize === 0 || !q || p.z <= q.z)) {\n                    e = p;\n                    p = p.nextZ;\n                    pSize--;\n                } else {\n                    e = q;\n                    q = q.nextZ;\n                    qSize--;\n                }\n\n                if (tail) tail.nextZ = e;\n                else list = e;\n\n                e.prevZ = tail;\n                tail = e;\n            }\n\n            p = q;\n        }\n\n        tail.nextZ = null;\n        inSize *= 2;\n\n    } while (numMerges > 1);\n\n    return list;\n}\n\n// z-order of a point given coords and inverse of the longer side of data bbox\nfunction zOrder(x, y, minX, minY, invSize) {\n    // coords are transformed into non-negative 15-bit integer range\n    x = (x - minX) * invSize | 0;\n    y = (y - minY) * invSize | 0;\n\n    x = (x | (x << 8)) & 0x00FF00FF;\n    x = (x | (x << 4)) & 0x0F0F0F0F;\n    x = (x | (x << 2)) & 0x33333333;\n    x = (x | (x << 1)) & 0x55555555;\n\n    y = (y | (y << 8)) & 0x00FF00FF;\n    y = (y | (y << 4)) & 0x0F0F0F0F;\n    y = (y | (y << 2)) & 0x33333333;\n    y = (y | (y << 1)) & 0x55555555;\n\n    return x | (y << 1);\n}\n\n// find the leftmost node of a polygon ring\nfunction getLeftmost(start) {\n    let p = start,\n        leftmost = start;\n    do {\n        if (p.x < leftmost.x || (p.x === leftmost.x && p.y < leftmost.y)) leftmost = p;\n        p = p.next;\n    } while (p !== start);\n\n    return leftmost;\n}\n\n// check if a point lies within a convex triangle\nfunction pointInTriangle(ax, ay, bx, by, cx, cy, px, py) {\n    return (cx - px) * (ay - py) >= (ax - px) * (cy - py) &&\n           (ax - px) * (by - py) >= (bx - px) * (ay - py) &&\n           (bx - px) * (cy - py) >= (cx - px) * (by - py);\n}\n\n// check if a point lies within a convex triangle but false if its equal to the first point of the triangle\nfunction pointInTriangleExceptFirst(ax, ay, bx, by, cx, cy, px, py) {\n    return !(ax === px && ay === py) && pointInTriangle(ax, ay, bx, by, cx, cy, px, py);\n}\n\n// check if a diagonal between two polygon nodes is valid (lies in polygon interior)\nfunction isValidDiagonal(a, b) {\n    return a.next.i !== b.i && a.prev.i !== b.i && !intersectsPolygon(a, b) && // doesn't intersect other edges\n           (locallyInside(a, b) && locallyInside(b, a) && middleInside(a, b) && // locally visible\n            (area(a.prev, a, b.prev) || area(a, b.prev, b)) || // does not create opposite-facing sectors\n            equals(a, b) && area(a.prev, a, a.next) > 0 && area(b.prev, b, b.next) > 0); // special zero-length case\n}\n\n// signed area of a triangle\nfunction area(p, q, r) {\n    return (q.y - p.y) * (r.x - q.x) - (q.x - p.x) * (r.y - q.y);\n}\n\n// check if two points are equal\nfunction equals(p1, p2) {\n    return p1.x === p2.x && p1.y === p2.y;\n}\n\n// check if two segments intersect\nfunction intersects(p1, q1, p2, q2) {\n    const o1 = sign(area(p1, q1, p2));\n    const o2 = sign(area(p1, q1, q2));\n    const o3 = sign(area(p2, q2, p1));\n    const o4 = sign(area(p2, q2, q1));\n\n    if (o1 !== o2 && o3 !== o4) return true; // general case\n\n    if (o1 === 0 && onSegment(p1, p2, q1)) return true; // p1, q1 and p2 are collinear and p2 lies on p1q1\n    if (o2 === 0 && onSegment(p1, q2, q1)) return true; // p1, q1 and q2 are collinear and q2 lies on p1q1\n    if (o3 === 0 && onSegment(p2, p1, q2)) return true; // p2, q2 and p1 are collinear and p1 lies on p2q2\n    if (o4 === 0 && onSegment(p2, q1, q2)) return true; // p2, q2 and q1 are collinear and q1 lies on p2q2\n\n    return false;\n}\n\n// for collinear points p, q, r, check if point q lies on segment pr\nfunction onSegment(p, q, r) {\n    return q.x <= Math.max(p.x, r.x) && q.x >= Math.min(p.x, r.x) && q.y <= Math.max(p.y, r.y) && q.y >= Math.min(p.y, r.y);\n}\n\nfunction sign(num) {\n    return num > 0 ? 1 : num < 0 ? -1 : 0;\n}\n\n// check if a polygon diagonal intersects any polygon segments\nfunction intersectsPolygon(a, b) {\n    let p = a;\n    do {\n        if (p.i !== a.i && p.next.i !== a.i && p.i !== b.i && p.next.i !== b.i &&\n                intersects(p, p.next, a, b)) return true;\n        p = p.next;\n    } while (p !== a);\n\n    return false;\n}\n\n// check if a polygon diagonal is locally inside the polygon\nfunction locallyInside(a, b) {\n    return area(a.prev, a, a.next) < 0 ?\n        area(a, b, a.next) >= 0 && area(a, a.prev, b) >= 0 :\n        area(a, b, a.prev) < 0 || area(a, a.next, b) < 0;\n}\n\n// check if the middle point of a polygon diagonal is inside the polygon\nfunction middleInside(a, b) {\n    let p = a;\n    let inside = false;\n    const px = (a.x + b.x) / 2;\n    const py = (a.y + b.y) / 2;\n    do {\n        if (((p.y > py) !== (p.next.y > py)) && p.next.y !== p.y &&\n                (px < (p.next.x - p.x) * (py - p.y) / (p.next.y - p.y) + p.x))\n            inside = !inside;\n        p = p.next;\n    } while (p !== a);\n\n    return inside;\n}\n\n// link two polygon vertices with a bridge; if the vertices belong to the same ring, it splits polygon into two;\n// if one belongs to the outer ring and another to a hole, it merges it into a single ring\nfunction splitPolygon(a, b) {\n    const a2 = createNode(a.i, a.x, a.y),\n        b2 = createNode(b.i, b.x, b.y),\n        an = a.next,\n        bp = b.prev;\n\n    a.next = b;\n    b.prev = a;\n\n    a2.next = an;\n    an.prev = a2;\n\n    b2.next = a2;\n    a2.prev = b2;\n\n    bp.next = b2;\n    b2.prev = bp;\n\n    return b2;\n}\n\n// create a node and optionally link it with previous one (in a circular doubly linked list)\nfunction insertNode(i, x, y, last) {\n    const p = createNode(i, x, y);\n\n    if (!last) {\n        p.prev = p;\n        p.next = p;\n\n    } else {\n        p.next = last.next;\n        p.prev = last;\n        last.next.prev = p;\n        last.next = p;\n    }\n    return p;\n}\n\nfunction removeNode(p) {\n    p.next.prev = p.prev;\n    p.prev.next = p.next;\n\n    if (p.prevZ) p.prevZ.nextZ = p.nextZ;\n    if (p.nextZ) p.nextZ.prevZ = p.prevZ;\n}\n\nfunction createNode(i, x, y) {\n    return {\n        i, // vertex index in coordinates array\n        x, y, // vertex coordinates\n        prev: null, // previous and next vertex nodes in a polygon ring\n        next: null,\n        z: 0, // z-order curve value\n        prevZ: null, // previous and next nodes in z-order\n        nextZ: null,\n        steiner: false // indicates whether this is a steiner point\n    };\n}\n\n// return a percentage difference between the polygon area and its triangulation area;\n// used to verify correctness of triangulation\nfunction deviation(data, holeIndices, dim, triangles) {\n    const hasHoles = holeIndices && holeIndices.length;\n    const outerLen = hasHoles ? holeIndices[0] * dim : data.length;\n\n    let polygonArea = Math.abs(signedArea(data, 0, outerLen, dim));\n    if (hasHoles) {\n        for (let i = 0, len = holeIndices.length; i < len; i++) {\n            const start = holeIndices[i] * dim;\n            const end = i < len - 1 ? holeIndices[i + 1] * dim : data.length;\n            polygonArea -= Math.abs(signedArea(data, start, end, dim));\n        }\n    }\n\n    let trianglesArea = 0;\n    for (let i = 0; i < triangles.length; i += 3) {\n        const a = triangles[i] * dim;\n        const b = triangles[i + 1] * dim;\n        const c = triangles[i + 2] * dim;\n        trianglesArea += Math.abs(\n            (data[a] - data[c]) * (data[b + 1] - data[a + 1]) -\n            (data[a] - data[b]) * (data[c + 1] - data[a + 1]));\n    }\n\n    return polygonArea === 0 && trianglesArea === 0 ? 0 :\n        Math.abs((trianglesArea - polygonArea) / polygonArea);\n}\n\nfunction signedArea(data, start, end, dim) {\n    let sum = 0;\n    for (let i = start, j = end - dim; i < end; i += dim) {\n        sum += (data[j] - data[i]) * (data[i + 1] + data[j + 1]);\n        j = i;\n    }\n    return sum;\n}\n\n// turn a polygon in a multi-dimensional array form (e.g. as in GeoJSON) into a form Earcut accepts\nfunction flatten(data) {\n    const vertices = [];\n    const holes = [];\n    const dimensions = data[0][0].length;\n    let holeIndex = 0;\n    let prevLen = 0;\n\n    for (const ring of data) {\n        for (const p of ring) {\n            for (let d = 0; d < dimensions; d++) vertices.push(p[d]);\n        }\n        if (prevLen) {\n            holeIndex += prevLen;\n            holes.push(holeIndex);\n        }\n        prevLen = ring.length;\n    }\n    return {vertices, holes, dimensions};\n}\n\n// geo.mjs\n\nfunction area2(ring){return ring.reduce((s,p,i)=>s+p[0]*ring[(i+1)%ring.length][1]-ring[(i+1)%ring.length][0]*p[1],0)/2;}\nfunction contains(ring,x,z){let yes=false;for(let i=0,j=ring.length-1;i<ring.length;j=i++){const a=ring[i],b=ring[j];if((a[1]>z)!==(b[1]>z)&&x<(b[0]-a[0])*(z-a[1])/(b[1]-a[1])+a[0])yes=!yes;}return yes;}\nfunction polygonGroups(rings){const sorted=[...rings].sort((a,b)=>Math.abs(area2(b))-Math.abs(area2(a))),groups=[];for(const ring of sorted){const parent=groups.filter(g=>contains(g.outer,ring[0][0],ring[0][1])).sort((a,b)=>Math.abs(area2(a.outer))-Math.abs(area2(b.outer)))[0];if(parent&&Math.sign(area2(parent.outer))!==Math.sign(area2(ring)))parent.holes.push(ring);else groups.push({outer:ring,holes:[]});}return groups;}\nfunction triangulateRings(rings){const triangles=[];for(const group of polygonGroups(rings)){const points=[...group.outer],holes=[];for(const h of group.holes){holes.push(points.length);points.push(...h);}const indices=earcut(points.flat(),holes,2);for(let k=0;k<indices.length;k+=3)triangles.push([points[indices[k]],points[indices[k+1]],points[indices[k+2]]]);}return triangles;}\nfunction boundsOf(rings){const b=[Infinity,Infinity,-Infinity,-Infinity];for(const r of rings)for(const p of r){b[0]=Math.min(b[0],p[0]);b[1]=Math.min(b[1],p[1]);b[2]=Math.max(b[2],p[0]);b[3]=Math.max(b[3],p[1]);}return b;}\nfunction elevationAt(data,x,z){const t=data.terrain,b=data.bounds,u=Math.max(0,Math.min(t.width-1,(x-b[0])/(b[2]-b[0])*t.width-.5)),v=Math.max(0,Math.min(t.height-1,(z-b[1])/(b[3]-b[1])*t.height-.5)),i=Math.floor(u),j=Math.floor(v),dx=u-i,dz=v-j;const sample=(a,c)=>t.values[Math.min(t.height-1,c)*t.width+Math.min(t.width-1,a)];return sample(i,j)*(1-dx)*(1-dz)+sample(i+1,j)*dx*(1-dz)+sample(i,j+1)*(1-dx)*dz+sample(i+1,j+1)*dx*dz;}\nfunction lonLat(data,x,z){const p=data.projection,mx=p.originMercator[0]+x/p.cosLatitude,my=p.originMercator[1]-z/p.cosLatitude;return[mx/p.radius*180/Math.PI,(2*Math.atan(Math.exp(my/p.radius))-Math.PI/2)*180/Math.PI];}\nfunction localFromLonLat(data,lon,lat){const p=data.projection,mx=p.radius*lon*Math.PI/180,my=p.radius*Math.log(Math.tan(Math.PI/4+lat*Math.PI/360));return[(mx-p.originMercator[0])*p.cosLatitude,-(my-p.originMercator[1])*p.cosLatitude];}\nfunction prepareTown(data){for(const b of data.buildings){b.bounds=boundsOf(b.rings);b.center=[(b.bounds[0]+b.bounds[2])/2,(b.bounds[1]+b.bounds[3])/2];}for(const road of data.roads){road.bounds=boundsOf([road.points]);road.center=[(road.bounds[0]+road.bounds[2])/2,(road.bounds[1]+road.bounds[3])/2];}\n const main=data.roads.filter(r=>/main street/i.test(r.name)),third=data.roads.filter(r=>/3rd street/i.test(r.name));let intersection=null,best=Infinity;const thirdNodes=new Set(third.flatMap(r=>r.points.map(p=>p.join(','))));for(const r of main)for(const p of r.points)if(thirdNodes.has(p.join(','))&&Math.hypot(...p)<best){intersection=p;best=Math.hypot(...p);}\n const find=expression=>data.buildings.find(b=>expression.test(b.name));data.checkpoints={downtown:{center:intersection||[0,0],span:1300,label:'Main & Third'},city:{center:[0,0],span:8500,label:'8 km reference window'},campus:{center:find(/Old Centre|Norton Center|Olin Hall/i)?.center||[-700,-200],span:1500,label:'Centre College area'},south:{center:[0,2100],span:2700,label:'South Danville'}};return data;\n}\nfunction pickBuilding(data,x,z){for(const b of data.buildings){const box=b.bounds;if(x<box[0]||x>box[2]||z<box[1]||z>box[3])continue;let inside=false;for(const ring of b.rings)if(contains(ring,x,z))inside=!inside;if(inside)return b;}return null;}\n\n// mesh.mjs\n\nfunction buildMapMeshes(data){const terrain=[],roads=[],buildings=[],origin=elevationAt(data,0,0);let invalid=0;\n const point=(x,z,offset=0)=>[x,elevationAt(data,x,z)-origin+offset,z];\n function tri(target,a,b,c,color,type,grounds){const u=b.map((x,i)=>x-a[i]),v=c.map((x,i)=>x-a[i]),n=[u[1]*v[2]-u[2]*v[1],u[2]*v[0]-u[0]*v[2],u[0]*v[1]-u[1]*v[0]],length=Math.hypot(...n);if(length<1e-7)return;for(let k=0;k<3;k++)target.push(...[a,b,c][k],...n.map(x=>x/length),...color,type,grounds?grounds[k]:[a,b,c][k][1]);}\n function groundTri(target,a,b,c,color,type){if((b[2]-a[2])*(c[0]-a[0])-(b[0]-a[0])*(c[2]-a[2])<0)[b,c]=[c,b];tri(target,a,b,c,color,type);}\n const N=128,b=data.bounds;for(let j=0;j<N;j++)for(let i=0;i<N;i++){const x=b[0]+i/N*(b[2]-b[0]),z=b[1]+j/N*(b[3]-b[1]),xx=b[0]+(i+1)/N*(b[2]-b[0]),zz=b[1]+(j+1)/N*(b[3]-b[1]);const a=point(x,z),c=point(xx,zz);groundTri(terrain,a,point(xx,z),c,[.47,.57,.43],0);groundTri(terrain,a,c,point(x,zz),[.47,.57,.43],0);}\n for(const road of data.roads){const width=/main|lexington|stanford|perryville|bypass|highway/i.test(road.name)?10:6.5;for(let j=1;j<road.points.length;j++){const a=road.points[j-1],c=road.points[j],length=Math.hypot(c[0]-a[0],c[1]-a[1]);if(length<.1)continue;const nx=-(c[1]-a[1])/length*width/2,nz=(c[0]-a[0])/length*width/2,steps=Math.max(1,Math.ceil(length/30));for(let k=0;k<steps;k++){const p=a.map((x,i)=>x+(c[i]-x)*k/steps),q=a.map((x,i)=>x+(c[i]-x)*(k+1)/steps),A=point(p[0]+nx,p[1]+nz,.32),B=point(p[0]-nx,p[1]-nz,.32),C=point(q[0]-nx,q[1]-nz,.32),D=point(q[0]+nx,q[1]+nz,.32);groundTri(roads,A,B,C,[.29,.32,.33],3);groundTri(roads,A,C,D,[.29,.32,.33],3);}}}\n for(const building of data.buildings){const topBase=Math.max(...building.rings.flat().map(p=>elevationAt(data,...p)-origin)),top=topBase+building.height,known=building.heightBasis==='source-height',roof=known?[.66,.68,.65]:[.75,.56,.32],wall=known?[.60,.64,.61]:[.69,.52,.32];let triangles;try{triangles=triangulateRings(building.rings);}catch{invalid++;continue;}\n  for(const t of triangles){let [a,b,c]=t.map(p=>[p[0],top,p[1]]);if((b[2]-a[2])*(c[0]-a[0])-(b[0]-a[0])*(c[2]-a[2])<0)[b,c]=[c,b];tri(buildings,a,b,c,roof,1,[topBase,topBase,topBase]);}\n  for(const ring of building.rings)for(let k=0;k<ring.length;k++){const p=ring[k],q=ring[(k+1)%ring.length],a=point(p[0],p[1],-.25),b=point(q[0],q[1],-.25),c=[q[0],top,q[1]],d=[p[0],top,p[1]];tri(buildings,a,c,b,wall,2,[a[1],topBase,b[1]]);tri(buildings,a,d,c,wall,2,[a[1],topBase,topBase]);}\n }\n const result={terrain:new Float32Array(terrain),roads:new Float32Array(roads),buildings:new Float32Array(buildings),originElevation:origin,stats:{buildingCount:data.buildings.length,roadPathCount:data.roads.length,failedBuildings:invalid,triangles:(terrain.length+roads.length+buildings.length)/33,gpuBufferBytes:(terrain.length+roads.length+buildings.length)*4}};return result;\n}\n\nonmessage=e=>{try{const meshes=buildMapMeshes(e.data);postMessage({meshes},[meshes.terrain.buffer,meshes.roads.buffer,meshes.buildings.buffer]);}catch(error){postMessage({error:String(error)});}};";
+
+// app.mjs
+
+
+const map$=id=>document.getElementById(id),mapCanvas=map$('map'),mapContext=mapCanvas.getContext('2d'),glCanvas=map$('three');
+const mapState=window.__danvilleMap={ready:false,error:null,mode:'map',threeReady:false,frames:0,selected:null};
+let town,mapMode='map',view={x:23,z:-24.7,span:1300},selection=null,imagery={},three=null,meshes=null,meshPromise=null,drag=null,dirty=true;
+let orbitAngle=.55,orbitPitch=.85,orbitDistance=1500,fly=false,flyEye=[0,150,300],flyYaw=0,flyPitch=-.4,previous=0;
+const keySet=new Set(),roadLabels=[],mapPointers=new Map();let mapPinch=null;
+function screen(p){const k=innerWidth/view.span;return[(p[0]-view.x)*k+innerWidth/2,(p[1]-view.z)*k+innerHeight/2];}
+function localAt(x,y){const k=view.span/innerWidth;return[view.x+(x-innerWidth/2)*k,view.z+(y-innerHeight/2)*k];}
+function mapIntersects(b,range){return b[0]<=range[2]&&b[2]>=range[0]&&b[1]<=range[3]&&b[3]>=range[1];}
+function boundsView(){const halfHeight=view.span/innerWidth*innerHeight/2;return[view.x-view.span/2,view.z-halfHeight,view.x+view.span/2,view.z+halfHeight];}
+function setStatus(text){map$('status').textContent=text;}
+async function loadAerial(){if(imagery.city&&imagery.detail)return;setStatus('Loading the aerial reference…');try{const load=(key,url)=>new Promise((resolve,reject)=>{const image=new Image();image.onload=()=>{imagery[key]=image;three?.image(key,image);dirty=true;resolve();};image.onerror=()=>reject(Error('Could not load aerial reference'));image.src=url;});await Promise.all([imagery.city?Promise.resolve():load('city','./aerial-city.jpg'),imagery.detail?Promise.resolve():load('detail','./aerial-downtown.jpg')]);setStatus('Aerial photography: KyFromAbove Phase 3, 2022–2024.');}catch(error){setStatus(error.message);}}
+function drawPath(points,close=false){const c=mapContext;c.beginPath();points.forEach((p,i)=>{const q=screen(p);i?c.lineTo(...q):c.moveTo(...q);});if(close)c.closePath();}
+function drawRaster(image,bounds){const a=screen(bounds.slice(0,2)),b=screen(bounds.slice(2));mapContext.drawImage(image,a[0],a[1],b[0]-a[0],b[1]-a[1]);}
+function labelsForView(range){const choices=new Map();for(const r of town.roads){if(!r.name||!mapIntersects(r.bounds,range))continue;const p=screen(r.center);if(p[0]<40||p[0]>innerWidth-40||p[1]<130||p[1]>innerHeight-60)continue;const length=Math.hypot(r.bounds[2]-r.bounds[0],r.bounds[3]-r.bounds[1]),score=length/(1+Math.hypot(r.center[0]-view.x,r.center[1]-view.z)/view.span);if(!choices.has(r.name)||choices.get(r.name).score<score)choices.set(r.name,{...r,score});}return [...choices.values()].sort((a,b)=>b.score-a.score);}
+function drawMap(){if(!town||mapMode==='three')return;const dpr=Math.min(devicePixelRatio,2),c=mapContext;mapCanvas.width=Math.round(innerWidth*dpr);mapCanvas.height=Math.round(innerHeight*dpr);c.scale(dpr,dpr);c.fillStyle=mapMode==='aerial'?'#283e3b':'#e4e9df';c.fillRect(0,0,innerWidth,innerHeight);const range=boundsView(),k=innerWidth/view.span;
+ if(mapMode==='aerial'&&imagery.city){drawRaster(imagery.city,town.bounds);if(imagery.detail&&view.span<3000)drawRaster(imagery.detail,town.imagery.downtownBounds);}else{
+  c.strokeStyle='#cbd6c5';c.lineWidth=1;for(let x=Math.ceil(range[0]/500)*500;x<range[2];x+=500){drawPath([[x,range[1]],[x,range[3]]]);c.stroke();}for(let z=Math.ceil(range[1]/500)*500;z<range[3];z+=500){drawPath([[range[0],z],[range[2],z]]);c.stroke();}
+  c.lineCap='round';c.lineJoin='round';for(const edge of[true,false])for(const r of town.roads){if(!mapIntersects(r.bounds,range))continue;drawPath(r.points);const major=/main|lexington|stanford|perryville|bypass|highway/i.test(r.name);c.lineWidth=Math.max(major?2.2:1.1,(major?10:6.5)*k)+(edge?2:0);c.strokeStyle=edge?'#bdc8bd':'#fffdf5';c.stroke();}
+ }
+ if(map$('footprints').checked){c.globalAlpha=mapMode==='aerial'?Number(map$('opacity').value)/100:1;for(const b of town.buildings){if(!mapIntersects(b.bounds,range))continue;c.beginPath();for(const r of b.rings){r.forEach((p,i)=>{const q=screen(p);i?c.lineTo(...q):c.moveTo(...q);});c.closePath();}c.fillStyle=b.heightBasis==='source-height'?(mapMode==='aerial'?'#4bc8d3':'#829e9b'):(mapMode==='aerial'?'#f7bb60':'#c8a16b');c.fill('evenodd');if(view.span<2500){c.strokeStyle=mapMode==='aerial'?'#d3f4ef':'#5f817f';c.lineWidth=.6;c.stroke();}}c.globalAlpha=1;}
+ if(selection){c.lineWidth=3;c.strokeStyle='#ffb52f';for(const ring of selection.rings){drawPath(ring,true);c.stroke();}}
+ // Label real named road segments, with screen-space collision avoidance.
+ if(map$('labels').checked&&view.span<6000){const occupied=[];c.font='12px system-ui';c.textAlign='center';c.textBaseline='middle';for(const r of labelsForView(range)){if(!mapIntersects(r.bounds,range))continue;const p=screen(r.center),width=c.measureText(r.name).width;if(p[0]<80||p[0]>innerWidth-80||p[1]<155||p[1]>innerHeight-65)continue;const box=[p[0]-width/2-6,p[1]-10,p[0]+width/2+6,p[1]+10];if(occupied.some(b=>mapIntersects(b,box)))continue;occupied.push(box);c.lineWidth=4;c.strokeStyle=mapMode==='aerial'?'#15282bd9':'#f5f6ef';c.strokeText(r.name,...p);c.fillStyle=mapMode==='aerial'?'#fff':'#294440';c.fillText(r.name,...p);}}
+ mapState.view={...view};mapState.visibleBuildings=town.buildings.filter(b=>mapIntersects(b.bounds,range)).length;updateScale();mapState.frames++;dirty=false;
+}
+function updateScale(){const values=[25,50,100,200,500,1000,2000],metres=values.reduce((best,n)=>n/view.span*innerWidth<170?n:best,25);map$('scale-line').style.width=(metres/view.span*innerWidth)+'px';map$('scale-text').textContent=metres>=1000?(metres/1000)+' km':metres+' m';}
+function selectBuilding(b){selection=b;mapState.selected=b?.id||null;map$('selection').hidden=!b;if(!b){dirty=true;return;}map$('building-name').textContent=b.name||'Mapped building footprint';map$('building-height').textContent=b.height.toFixed(1)+' m · '+(b.heightBasis==='source-height'?'source-provided height':b.heightBasis==='floor-estimate'?'estimated from floor count':'assumed height');const coordinates=lonLat(town,...b.center);map$('building-coordinates').textContent=coordinates[1].toFixed(6)+', '+coordinates[0].toFixed(6);map$('building-id').textContent=b.id;dirty=true;}
+async function ensureThree(){if(three)return;if(!meshPromise){setStatus('Generating map-aligned terrain and building volumes…');meshPromise=new Promise((resolve,reject)=>{const url=URL.createObjectURL(new Blob([mapWorkerSource],{type:'text/javascript'})),worker=new Worker(url);worker.onmessage=e=>{worker.terminate();URL.revokeObjectURL(url);e.data.error?reject(Error(e.data.error)):resolve(e.data.meshes);};worker.onerror=e=>{worker.terminate();URL.revokeObjectURL(url);reject(Error(e.message));};worker.postMessage(town);});}
+ try{meshes=await meshPromise;three=new MapRenderer(glCanvas,meshes,town);for(const key of['city','detail'])if(imagery[key])three.image(key,imagery[key]);mapState.threeReady=true;mapState.meshStats=meshes.stats;mapState.device=three.device;setStatus('3D footprint preview. Facades and roof shapes are not reconstructed.');}catch(error){mapState.error=String(error);setStatus(error.message);}}
+async function setMapMode(mode){mapMode=mode;mapState.mode=mode;for(const m of['map','aerial','three'])map$(m+'-button').classList.toggle('active',mode===m);mapCanvas.hidden=mode==='three';glCanvas.hidden=mode!=='three';map$('three-tools').hidden=mode!=='three';map$('labels').parentElement.hidden=mode==='three';map$('opacity').parentElement.hidden=mode==='three';document.querySelector('.scale').hidden=mode==='three';map$('coordinates').hidden=mode==='three';if(mode==='three')selectBuilding(null);if(mode==='aerial')await loadAerial();if(mode==='three'){orbitDistance=view.span*.9;await ensureThree();}dirty=true;}
+function checkpoint(id){const p=town.checkpoints[id];view={x:p.center[0],z:p.center[1],span:p.span};orbitDistance=p.span*.9;fly=false;dirty=true;mapState.checkpoint=id;mapState.view={...view};}
+function search(){const q=map$('search').value.trim().toLowerCase();if(q.length<2)return;const b=town.buildings.find(b=>b.name.toLowerCase().includes(q));if(b){view={x:b.center[0],z:b.center[1],span:450};orbitDistance=400;selectBuilding(b);}else{const r=town.roads.filter(r=>r.name.toLowerCase().includes(q)).sort((a,b)=>Math.hypot(...a.center)-Math.hypot(...b.center))[0];if(r){view={x:r.center[0],z:r.center[1],span:1100};orbitDistance=990;setStatus('Road centre line: '+r.name);}else setStatus('No name match in this snapshot. Try Main, 3rd or Courthouse.');}dirty=true;}
+for(const canvas of[mapCanvas,glCanvas]){canvas.onpointerdown=e=>{canvas.focus();canvas.setPointerCapture(e.pointerId);mapPointers.set(e.pointerId,[e.clientX,e.clientY]);if(mapPointers.size===2){const a=[...mapPointers.values()];mapPinch={distance:Math.hypot(a[0][0]-a[1][0],a[0][1]-a[1][1]),center:[(a[0][0]+a[1][0])/2,(a[0][1]+a[1][1])/2]};}drag={start:[e.clientX,e.clientY],last:[e.clientX,e.clientY],moved:0};};canvas.onpointermove=e=>{const p=localAt(e.clientX,e.clientY),ll=town?lonLat(town,...p):[0,0];map$('coordinates').textContent=ll[1].toFixed(5)+', '+ll[0].toFixed(5);if(mapPointers.has(e.pointerId))mapPointers.set(e.pointerId,[e.clientX,e.clientY]);if(mapPointers.size===2&&mapPinch){const a=[...mapPointers.values()],distance=Math.hypot(a[0][0]-a[1][0],a[0][1]-a[1][1]),center=[(a[0][0]+a[1][0])/2,(a[0][1]+a[1][1])/2],factor=mapPinch.distance/Math.max(distance,1);if(mapMode==='three')orbitDistance=Math.max(20,Math.min(15000,orbitDistance*factor));else{const before=localAt(...mapPinch.center);view.span=Math.max(180,Math.min(13000,view.span*factor));const after=localAt(...center);view.x+=before[0]-after[0];view.z+=before[1]-after[1];}mapPinch={distance,center};dirty=true;return;}if(!drag)return;const dx=e.clientX-drag.last[0],dy=e.clientY-drag.last[1];drag.moved+=Math.hypot(dx,dy);drag.last=[e.clientX,e.clientY];if(mapMode==='three'){if(fly){flyYaw+=dx*.003;flyPitch=Math.max(-1.4,Math.min(1.4,flyPitch-dy*.003));}else if(e.shiftKey){view.x-=dx*view.span/innerWidth;view.z-=dy*view.span/innerWidth;}else{orbitAngle-=dx*.005;orbitPitch=Math.max(.12,Math.min(1.48,orbitPitch+dy*.005));}}else{view.x-=dx*view.span/innerWidth;view.z-=dy*view.span/innerWidth;}dirty=true;};canvas.onpointerup=e=>{if(!mapPinch&&drag?.moved<5&&mapMode!=='three'){const p=localAt(e.clientX,e.clientY);selectBuilding(pickBuilding(town,...p));}mapPointers.delete(e.pointerId);mapPinch=null;drag=null;};canvas.onpointercancel=e=>{mapPointers.delete(e.pointerId);mapPinch=null;drag=null;};canvas.addEventListener('wheel',e=>{e.preventDefault();const factor=Math.exp(e.deltaY*.001);if(mapMode==='three')orbitDistance=Math.max(20,Math.min(15000,orbitDistance*factor));else{const before=localAt(e.clientX,e.clientY);view.span=Math.max(180,Math.min(13000,view.span*factor));const after=localAt(e.clientX,e.clientY);view.x+=before[0]-after[0];view.z+=before[1]-after[1];}dirty=true;},{passive:false});}
+for(const m of['map','aerial','three'])map$(m+'-button').onclick=()=>setMapMode(m);map$('checkpoint').onchange=e=>checkpoint(e.target.value);for(const id of['footprints','opacity','labels','terrain','three-aerial'])map$(id).oninput=()=>{if(id==='three-aerial'&&map$(id).checked)loadAerial();dirty=true;};map$('search-form').onsubmit=e=>{e.preventDefault();search();};map$('close-selection').onclick=()=>selectBuilding(null);map$('help').onclick=()=>{map$('help-panel').hidden=false;};map$('close-help').onclick=()=>{map$('help-panel').hidden=true;};map$('layers-button').onclick=()=>{map$('layers').hidden=!map$('layers').hidden;map$('layers-button').classList.toggle('active',!map$('layers').hidden);};
+map$('orbit-button').onclick=()=>{fly=false;map$('orbit-button').classList.add('active');map$('fly-button').classList.remove('active');};map$('fly-button').onclick=()=>{fly=true;map$('fly-button').classList.add('active');map$('orbit-button').classList.remove('active');const ground=map$('terrain').checked?elevationAt(town,view.x,view.z)-meshes.originElevation:0;flyEye=[view.x,ground+120,view.z+250];flyYaw=0;flyPitch=-.4;glCanvas.focus();};
+window.addEventListener('keydown',e=>{if(['INPUT','SELECT','BUTTON'].includes(e.target.tagName))return;keySet.add(e.code);if(['KeyW','KeyA','KeyS','KeyD','KeyQ','KeyE'].includes(e.code))e.preventDefault();});window.addEventListener('keyup',e=>keySet.delete(e.code));window.addEventListener('blur',()=>{keySet.clear();drag=null;});window.addEventListener('resize',()=>{dirty=true;});
+function frame(t){requestAnimationFrame(frame);if(!town||document.hidden)return;const dt=previous?Math.min((t-previous)/1000,.1):.016;previous=t;if(mapMode!=='three'){if(dirty)drawMap();return;}if(!three)return;let eye,target;const ground=map$('terrain').checked?elevationAt(town,view.x,view.z)-meshes.originElevation:0;
+ if(fly){const f=Number(keySet.has('KeyW'))-Number(keySet.has('KeyS')),s=Number(keySet.has('KeyD'))-Number(keySet.has('KeyA')),speed=(keySet.has('ShiftLeft')?160:50)*dt;flyEye[0]+=(Math.sin(flyYaw)*f+Math.cos(flyYaw)*s)*speed;flyEye[2]+=(-Math.cos(flyYaw)*f+Math.sin(flyYaw)*s)*speed;flyEye[1]+=(Number(keySet.has('KeyE'))-Number(keySet.has('KeyQ'))+Math.sin(flyPitch)*f)*speed;eye=flyEye;target=[eye[0]+Math.sin(flyYaw)*Math.cos(flyPitch),eye[1]+Math.sin(flyPitch),eye[2]-Math.cos(flyYaw)*Math.cos(flyPitch)];}else{target=[view.x,ground,view.z];eye=[view.x+Math.sin(orbitAngle)*Math.cos(orbitPitch)*orbitDistance,ground+Math.sin(orbitPitch)*orbitDistance,view.z+Math.cos(orbitAngle)*Math.cos(orbitPitch)*orbitDistance];}
+ mapState.render=three.render(eye,target,{terrain:map$('terrain').checked,buildings:map$('footprints').checked,aerial:map$('three-aerial').checked&&!!imagery.city,detail:!!imagery.detail});mapState.eye=[...eye];mapState.frames++;
+}
+async function start(){try{const response=await fetch('./town-data.bin');if(!response.ok)throw Error('Town snapshot is missing');const compressed=await response.arrayBuffer();town=prepareTown(await new Response(new Blob([compressed]).stream().pipeThrough(new DecompressionStream('gzip'))).json());mapState.stats={buildings:town.buildings.length,roads:town.roads.length,sourceHeight:town.buildings.filter(b=>b.heightBasis==='source-height').length,dataBytes:compressed.byteLength};const unique=new Map();for(const r of town.roads){const length=Math.hypot(r.bounds[2]-r.bounds[0],r.bounds[3]-r.bounds[1]);if(!unique.has(r.name)||unique.get(r.name).length<length)unique.set(r.name,{...r,length});}roadLabels.push(...[...unique.values()].sort((a,b)=>b.length-a.length));checkpoint('downtown');map$('loading').hidden=true;mapState.ready=true;map$('counts').textContent=town.buildings.length.toLocaleString()+' footprints · '+town.roads.length.toLocaleString()+' road paths';setStatus('Click a footprint to inspect its source and height.');window.__mapControls={checkpoint,setMode:setMapMode,select:selectBuilding,data:()=>town,view:()=>view};dirty=true;}catch(error){mapState.error=String(error);map$('loading-message').textContent=error.message;console.error(error);}}
+if(innerWidth<640){map$('layers').hidden=true;map$('layers-button').classList.remove('active');}start();requestAnimationFrame(frame);
+</script></body></html>
