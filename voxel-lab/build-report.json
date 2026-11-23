@@ -1,0 +1,15 @@
+{
+  "htmlBytes": 103741,
+  "gzipBytes": 36998,
+  "brotliBytes": 23181,
+  "externalRuntimeRequests": 0,
+  "contains": [
+    "procedural storefront",
+    "sparse voxel engine",
+    "hybrid storefront",
+    "renderer",
+    "worker mesher",
+    "controls"
+  ],
+  "budgetBytes": 1000000
+}
