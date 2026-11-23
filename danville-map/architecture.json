@@ -1,5 +1,5 @@
 {
-  "version": 1,
+  "version": 2,
   "status": "Photo-interpreted pilot, not a measured survey",
   "reference": {
     "provider": "KyFromAbove / Kentucky DGI",
@@ -35,6 +35,61 @@
           0.22,
           0.24,
           0.23
+        ],
+        "storefronts": [
+          {
+            "center": 0.17,
+            "width": 0.22,
+            "y": 0.3,
+            "h": 2.25,
+            "door": false,
+            "frame": [
+              0.78,
+              0.77,
+              0.68
+            ],
+            "panes": 0,
+            "boarded": false
+          },
+          {
+            "center": 0.5,
+            "width": 0.19,
+            "y": 0.08,
+            "h": 2.9,
+            "door": true,
+            "frame": [
+              0.78,
+              0.77,
+              0.68
+            ],
+            "panes": 0,
+            "boarded": false
+          },
+          {
+            "center": 0.82,
+            "width": 0.23,
+            "y": 0.3,
+            "h": 2.25,
+            "door": false,
+            "frame": [
+              0.78,
+              0.77,
+              0.68
+            ],
+            "panes": 0,
+            "boarded": false
+          }
+        ],
+        "fascia": [
+          0.7,
+          0.7,
+          0.61
+        ],
+        "roofUnits": [
+          [
+            0.5,
+            0.75
+          ]
         ]
       },
       {
@@ -52,6 +107,61 @@
           0.77,
           0.78,
           0.73
+        ],
+        "storefronts": [
+          {
+            "center": 0.16,
+            "width": 0.23,
+            "y": 0.4,
+            "h": 2.3,
+            "door": false,
+            "frame": [
+              0.78,
+              0.77,
+              0.68
+            ],
+            "panes": 0,
+            "boarded": false
+          },
+          {
+            "center": 0.37,
+            "width": 0.12,
+            "y": 0.08,
+            "h": 3.05,
+            "door": true,
+            "frame": [
+              0.78,
+              0.77,
+              0.68
+            ],
+            "panes": 0,
+            "boarded": false
+          },
+          {
+            "center": 0.72,
+            "width": 0.46,
+            "y": 0.4,
+            "h": 2.3,
+            "door": false,
+            "frame": [
+              0.78,
+              0.77,
+              0.68
+            ],
+            "panes": 2,
+            "boarded": false
+          }
+        ],
+        "fascia": null,
+        "roofUnits": [
+          [
+            0.35,
+            0.65
+          ],
+          [
+            0.7,
+            0.8
+          ]
         ]
       },
       {
@@ -68,6 +178,47 @@
           0.23,
           0.25,
           0.24
+        ],
+        "storefronts": [
+          {
+            "center": 0.12,
+            "width": 0.12,
+            "y": 0.1,
+            "h": 2.95,
+            "door": true,
+            "frame": [
+              0.22,
+              0.24,
+              0.21
+            ],
+            "panes": 0,
+            "boarded": false
+          },
+          {
+            "center": 0.6,
+            "width": 0.62,
+            "y": 0.4,
+            "h": 2.3,
+            "door": false,
+            "frame": [
+              0.22,
+              0.24,
+              0.21
+            ],
+            "panes": 2,
+            "boarded": false
+          }
+        ],
+        "fascia": [
+          0.12,
+          0.15,
+          0.15
+        ],
+        "roofUnits": [
+          [
+            0.5,
+            0.75
+          ]
         ]
       },
       {
@@ -84,6 +235,47 @@
           0.73,
           0.73,
           0.68
+        ],
+        "storefronts": [
+          {
+            "center": 0.1,
+            "width": 0.12,
+            "y": 0.1,
+            "h": 2.9,
+            "door": true,
+            "frame": [
+              0.78,
+              0.77,
+              0.68
+            ],
+            "panes": 0,
+            "boarded": false
+          },
+          {
+            "center": 0.6,
+            "width": 0.68,
+            "y": 0.15,
+            "h": 2.8,
+            "door": false,
+            "frame": [
+              0.78,
+              0.77,
+              0.68
+            ],
+            "panes": 2,
+            "boarded": true
+          }
+        ],
+        "fascia": [
+          0.47,
+          0.61,
+          0.56
+        ],
+        "roofUnits": [
+          [
+            0.5,
+            0.75
+          ]
         ]
       },
       {
@@ -101,6 +293,61 @@
           0.74,
           0.75,
           0.7
+        ],
+        "storefronts": [
+          {
+            "center": 0.22,
+            "width": 0.17,
+            "y": 0.24,
+            "h": 6.2,
+            "door": false,
+            "frame": [
+              0.78,
+              0.77,
+              0.68
+            ],
+            "panes": 0,
+            "boarded": false
+          },
+          {
+            "center": 0.5,
+            "width": 0.17,
+            "y": 0.08,
+            "h": 6.35,
+            "door": true,
+            "frame": [
+              0.78,
+              0.77,
+              0.68
+            ],
+            "panes": 0,
+            "boarded": false
+          },
+          {
+            "center": 0.78,
+            "width": 0.17,
+            "y": 0.24,
+            "h": 6.2,
+            "door": false,
+            "frame": [
+              0.78,
+              0.77,
+              0.68
+            ],
+            "panes": 0,
+            "boarded": false
+          }
+        ],
+        "fascia": null,
+        "roofUnits": [
+          [
+            0.35,
+            0.65
+          ],
+          [
+            0.7,
+            0.8
+          ]
         ]
       },
       {
@@ -117,6 +364,61 @@
           0.65,
           0.66,
           0.61
+        ],
+        "storefronts": [
+          {
+            "center": 0.16,
+            "width": 0.18,
+            "y": 0.2,
+            "h": 2.6,
+            "door": false,
+            "frame": [
+              0.22,
+              0.24,
+              0.21
+            ],
+            "panes": 0,
+            "boarded": false
+          },
+          {
+            "center": 0.5,
+            "width": 0.18,
+            "y": 0.05,
+            "h": 2.85,
+            "door": true,
+            "frame": [
+              0.22,
+              0.24,
+              0.21
+            ],
+            "panes": 0,
+            "boarded": false
+          },
+          {
+            "center": 0.82,
+            "width": 0.2,
+            "y": 0.2,
+            "h": 2.6,
+            "door": false,
+            "frame": [
+              0.22,
+              0.24,
+              0.21
+            ],
+            "panes": 0,
+            "boarded": false
+          }
+        ],
+        "fascia": [
+          0.16,
+          0.13,
+          0.12
+        ],
+        "roofUnits": [
+          [
+            0.5,
+            0.75
+          ]
         ]
       },
       {
@@ -133,6 +435,51 @@
           0.73,
           0.74,
           0.68
+        ],
+        "storefronts": [
+          {
+            "center": 0.16,
+            "width": 0.16,
+            "y": 0.1,
+            "h": 2.9,
+            "door": true,
+            "frame": [
+              0.78,
+              0.77,
+              0.68
+            ],
+            "panes": 0,
+            "boarded": false
+          },
+          {
+            "center": 0.63,
+            "width": 0.52,
+            "y": 0.45,
+            "h": 2.3,
+            "door": false,
+            "frame": [
+              0.78,
+              0.77,
+              0.68
+            ],
+            "panes": 2,
+            "boarded": false
+          }
+        ],
+        "fascia": [
+          0.47,
+          0.58,
+          0.55
+        ],
+        "roofUnits": [
+          [
+            0.35,
+            0.65
+          ],
+          [
+            0.7,
+            0.8
+          ]
         ]
       }
     ]
