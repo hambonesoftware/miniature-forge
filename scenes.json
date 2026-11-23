@@ -1,0 +1,16 @@
+[
+  {
+    "id": "danville",
+    "title": "Danville Main Street",
+    "description": "Present-day heritage study \u00c2\u00b7 Dimensions estimated",
+    "model": "./assets/danville.glb",
+    "navigation": "./assets/danville-nav.json"
+  },
+  {
+    "id": "riverton",
+    "title": "Explore Riverton",
+    "description": "Completed town \u00c2\u00b7 Outdoor navigation prototype",
+    "model": "./assets/riverton.glb",
+    "navigation": "./assets/riverton-nav.json"
+  }
+]
